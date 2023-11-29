@@ -1,7 +1,7 @@
 const express = require("express");
-const { generateToken } = require("../controller/payment.controller");
+const { generatePaymentUrl } = require("../controller/payment.controller");
 
 const router = express.Router();
 
-router.post("/", generateToken);
+router.post("/", generatePaymentUrl);
 module.exports = router;
