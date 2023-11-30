@@ -59,8 +59,24 @@ const update = async (req, res) => {
   try {
     const {
       body: { name, email, password, phone, address },
-      user,
     } = req;
+    const userExist = await UserModel.findOne({ email }).lean();
+    if (!userExist) {
+      throw new Error("Email does not exist!");
+    }
+    const encryptedPassword = await bcrypt.hash(password, 10);
+    const updateUser = await UserModel.updateOne(
+      { email: email },
+      {
+        $set: {
+          name: name,
+          email: email,
+          password: encryptedPassword,
+          phone: phone,
+          address: address,
+        },
+      }
+    );
   } catch (error) {
     res.send({ error: error.message });
   }
