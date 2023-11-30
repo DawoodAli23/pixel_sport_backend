@@ -12,7 +12,7 @@ const register = async (req, res) => {
     if (userExist) {
       throw new Error("Email is already taken");
     }
-    const encryptedPassword = await bcrypt.hash(password, 10);
+    const encryptedPassword = await bcrypt.hash(password, 11);
     const user = await UserModel.create({
       name,
       email,
