@@ -21,17 +21,20 @@ const generatePaymentUrl = async (req, res) => {
       item_0_name: package_id,
       merchantName: process.env.MERCHANT_USERNAME,
       merchantReferenceCode: timestamp,
-      merchantSecretKey: process.env.PAYMENT_SECRET_KEY,
+      merchantSecretKey: process.env.TEST_PAYMENT_SECRET_KEY,
       merchantToken: timestamp,
       returnUrl: "https://facebook.com",
     };
     const concatenatedString = generateConcatenatedString(body);
     const fullURL = concatenateWithEndpoint(
-      process.env.LIVE_MODE,
+      process.env.TEST_MODE,
       concatenatedString
     );
-    body["sig"] = generateHmacSha512(fullURL, process.env.PAYMENT_SECRET_KEY);
-    const token = await axios.post(process.env.LIVE_MODE, body, {
+    body["sig"] = generateHmacSha512(
+      fullURL,
+      process.env.TEST_PAYMENT_SECRET_KEY
+    );
+    const token = await axios.post(process.env.TEST_MODE, body, {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
@@ -44,7 +47,7 @@ const generatePaymentUrl = async (req, res) => {
 
     res.status(200).send({
       message: "Token Generated!",
-      data: `https://secure.paycec.com/redirect-service/webscreen?token=${token.data.token}`,
+      data: `https://securetest.paycec.com/redirect-service/webscreen?token=${token.data.token}`,
     });
   } catch (error) {
     res.send({ error: error.message });
