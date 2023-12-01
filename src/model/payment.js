@@ -22,6 +22,9 @@ const paymentSchema = mongoose.Schema(
       type: String,
       default: "pending",
     },
+    data: {
+      type: Object,
+    },
   },
   {
     timestamps: true,
