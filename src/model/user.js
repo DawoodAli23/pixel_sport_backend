@@ -38,6 +38,14 @@ const userSchema = mongoose.Schema(
     verifyCode: {
       type: String,
     },
+    freeTierAvailable: {
+      type: Boolean,
+      default: true,
+    },
+    expiryDate: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,
