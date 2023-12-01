@@ -35,6 +35,9 @@ const userSchema = mongoose.Schema(
     expDate: {
       type: Date,
     },
+    verifyCode: {
+      type: String,
+    },
   },
   {
     timestamps: true,
