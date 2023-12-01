@@ -46,6 +46,10 @@ const userSchema = mongoose.Schema(
       type: Date,
       default: null,
     },
+    packageId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "paymentpackages",
+    },
   },
   {
     timestamps: true,

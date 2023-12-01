@@ -117,6 +117,7 @@ const verifyPayment = async (req, res) => {
         },
         {
           expiryDate: nextDay,
+          packageId: package._id,
         }
       );
     }
