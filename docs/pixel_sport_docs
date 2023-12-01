@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"takaba\",\r\n    \"email\":\"test1111@test.com\",\r\n    \"password\":\"123123\"\r\n}",
+							"raw": "{\r\n    \"name\":\"takaba\",\r\n    \"email\":\"test@test.com\",\r\n    \"password\":\"123123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -43,7 +43,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"test1111@test.com\",\r\n    \"password\":\"123123\"\r\n}",
+							"raw": "{\r\n    \"email\":\"main@admin.com\",\r\n    \"password\":\"Rezan@112233\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -69,14 +69,121 @@
 			"name": "payment",
 			"item": [
 				{
-					"name": "New Request",
+					"name": "generate payment url",
 					"request": {
-						"method": "GET",
-						"header": []
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"package_id\":\"6567a4c0fa8822abef2d4407\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/payment",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"payment"
+							]
+						}
 					},
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "payment packages",
+			"item": [
+				{
+					"name": "get packages",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/packages",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"packages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create payment package",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Test\",\r\n    \"days\": 2,\r\n    \"amount\": 2,\r\n    \"status\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/packages",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"packages"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "inherit"
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
