@@ -2,10 +2,14 @@ const express = require("express");
 const router = express.Router();
 const authRoutes = require("./auth.routes");
 const paymentRoutes = require("./payment.routes");
+const categoryRoutes = require("./category.routes");
 const paymentPackagesRoutes = require("./paymentPackages.routes");
-const { userMiddleware } = require("../middleware/jwt");
+const liveTvRoutes = require("./liveTv.routes");
+const { userMiddleware, adminMiddleware } = require("../middleware/jwt");
 router
   .use("/auth", authRoutes)
   .use("/payment", userMiddleware, paymentRoutes)
-  .use("/packages", userMiddleware, paymentPackagesRoutes);
+  .use("/packages", userMiddleware, paymentPackagesRoutes)
+  .use("/category", categoryRoutes)
+  .use("/liveTV", liveTvRoutes);
 module.exports = router;

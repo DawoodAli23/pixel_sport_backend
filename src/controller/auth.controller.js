@@ -1,6 +1,5 @@
 const bcrypt = require("bcrypt");
 var jwt = require("jsonwebtoken");
-const { sendPasswordResetEmail } = require("../mail/mail");
 const { UserModel } = require("../model");
 const crypto = require("crypto");
 
