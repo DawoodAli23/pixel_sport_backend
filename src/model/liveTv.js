@@ -25,7 +25,7 @@ const liveTVSchema = new mongoose.Schema({
   },
   streamType: {
     type: String,
-    enum: ["hls/m3u8/http", "mpeg-dash", "embedcode", "youtube"],
+    enum: ["hls", "mpeg-dash", "embedcode", "youtube"],
   },
   server1URL: {
     type: String,
@@ -39,7 +39,6 @@ const liveTVSchema = new mongoose.Schema({
   },
   TVLogo: {
     type: String,
-    required: true,
   },
 });
 const LiveTV = mongoose.model("LiveTV", liveTVSchema);

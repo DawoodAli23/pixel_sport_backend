@@ -3,4 +3,6 @@ module.exports = {
   PaymentModel: require("./payment"),
   PaymentPackages: require("./paymentPackages"),
   CouponModel: require("./coupon"),
+  CategoryModel: require("./category"),
+  LiveTvModel: require("./liveTv"),
 };
