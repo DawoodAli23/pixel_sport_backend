@@ -11,7 +11,7 @@ const userMiddleware = async (req, res, next) => {
     const decodedToken = jwt.decode(token, process.env.JWT_SECRET);
     const user = await UserModel.findById(decodedToken.id).lean();
     req.user = user;
-    next();
+    return next();
   } catch (error) {
     res.status(401).send("Unauthorized!");
   }
@@ -23,7 +23,7 @@ const adminMiddleware = async (req, res, next) => {
       user: { userType },
     } = req;
     if (userType == "admin") {
-      next();
+      return next();
     }
     throw new Error("");
   } catch (error) {

@@ -38,6 +38,18 @@ const userSchema = mongoose.Schema(
     verifyCode: {
       type: String,
     },
+    freeTierAvailable: {
+      type: Boolean,
+      default: true,
+    },
+    expiryDate: {
+      type: Date,
+      default: null,
+    },
+    packageId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "paymentpackages",
+    },
   },
   {
     timestamps: true,
