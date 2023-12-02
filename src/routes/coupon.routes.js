@@ -11,6 +11,7 @@ const router = express.Router();
 router
   .post("/", adminMiddleware, createCoupon)
   .get("/", adminMiddleware, getCoupons)
+  .get("/:id", adminMiddleware, getCouponDetails)
   .put("/", adminMiddleware, editCoupon)
   .delete("/:_id", adminMiddleware, deleteCoupon)
   .post("/:code", availCoupon);
