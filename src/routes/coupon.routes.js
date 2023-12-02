@@ -5,6 +5,7 @@ const {
   editCoupon,
   deleteCoupon,
   availCoupon,
+  getCouponDetails,
 } = require("../controller/coupon.controller");
 const { adminMiddleware } = require("../middleware/jwt");
 const router = express.Router();
