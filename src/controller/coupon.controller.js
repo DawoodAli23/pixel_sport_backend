@@ -130,7 +130,7 @@ const getCouponDetails = async (req, res) => {
     const {
       params: { id },
     } = req;
-    const coupons = await CouponModel.find({ _id: id }).populate("plan").lean();
+    const coupons = await CouponModel.findOne({ _id: id }).lean();
     res.status(200).send({
       message: "Coupon Found!",
       data: coupons,
