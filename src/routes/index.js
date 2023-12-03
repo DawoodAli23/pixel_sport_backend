@@ -11,7 +11,7 @@ const { userMiddleware, adminMiddleware } = require("../middleware/jwt");
 router
   .use("/auth", authRoutes)
   .use("/payment", userMiddleware, paymentRoutes)
-  .use("/packages", userMiddleware, paymentPackagesRoutes)
+  .use("/packages", paymentPackagesRoutes)
   .use("/category", categoryRoutes)
   .use("/liveTV", liveTvRoutes)
   .use("/coupon", userMiddleware, couponRoutes)
