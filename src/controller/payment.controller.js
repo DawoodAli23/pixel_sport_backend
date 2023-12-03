@@ -6,6 +6,7 @@ const {
   concatenateWithEndpoint,
 } = require("../helper/generateHmac512");
 const { PaymentModel, PaymentPackages, UserModel } = require("../model");
+const { default: mongoose } = require("mongoose");
 
 const generatePaymentUrl = async (req, res) => {
   try {
@@ -163,6 +164,10 @@ const freeTier = async (req, res) => {
         expiryDate: nextDay,
       }
     );
+    await PaymentModel.create({
+      userId: user._id,
+      packageId: new mongoose.Types.ObjectId("656a28b0dd38c3eebf3454af"),
+    });
     res.status(200).send({
       message: "Free tier availed!",
     });

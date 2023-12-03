@@ -9,9 +9,13 @@ const couponSchema = mongoose.Schema(
     },
     plan: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "paymentpackages",
+      ref: "PaymentPackages",
     },
     numberOfUses: {
+      type: Number,
+      required: true,
+    },
+    totalNumberOfUses: {
       type: Number,
       required: true,
     },

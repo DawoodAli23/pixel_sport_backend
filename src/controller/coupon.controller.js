@@ -9,6 +9,7 @@ const createCoupon = async (req, res) => {
       code,
       plan,
       numberOfUses,
+      totalNumberOfUses: numberOfUses,
       status,
       expiryDate,
     });
@@ -111,9 +112,38 @@ const availCoupon = async (req, res) => {
     res.send({ error: error.message });
   }
 };
+
+const getCoupons = async (req, res) => {
+  try {
+    const coupons = await CouponModel.find({}).populate("plan").lean();
+    res.status(200).send({
+      message: "Coupon Found!",
+      data: coupons,
+    });
+  } catch (error) {
+    res.send({ error: error.message });
+  }
+};
+
+const getCouponDetails = async (req, res) => {
+  try {
+    const {
+      params: { id },
+    } = req;
+    const coupons = await CouponModel.findOne({ _id: id }).lean();
+    res.status(200).send({
+      message: "Coupon Found!",
+      data: coupons,
+    });
+  } catch (error) {
+    res.send({ error: error.message });
+  }
+};
 module.exports = {
   createCoupon,
   editCoupon,
   deleteCoupon,
   availCoupon,
+  getCoupons,
+  getCouponDetails,
 };

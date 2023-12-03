@@ -3,9 +3,11 @@ const {
   getPackages,
   createPackage,
 } = require("../controller/paymentPackages.controller");
-const { adminMiddleware } = require("../middleware/jwt");
+const { adminMiddleware, userMiddleware } = require("../middleware/jwt");
 
 const router = express.Router();
 
-router.get("/", getPackages).post("/", adminMiddleware, createPackage);
+router
+  .get("/", getPackages)
+  .post("/", userMiddleware, adminMiddleware, createPackage);
 module.exports = router;
