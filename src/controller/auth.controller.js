@@ -12,7 +12,7 @@ const register = async (req, res) => {
     if (userExist) {
       throw new Error("Email is already taken");
     }
-    const encryptedPassword = await bcrypt.hash(password, 11);
+    const encryptedPassword = await bcrypt.hash(password, 10);
     const user = await UserModel.create({
       name,
       email,
@@ -48,7 +48,7 @@ const createUser = async (req, res) => {
     if (userExist) {
       throw new Error("Email is already taken");
     }
-    const encryptedPassword = await bcrypt.hash(password, 11);
+    const encryptedPassword = await bcrypt.hash(password, 10);
     const user = await UserModel.create({
       name,
       email,
@@ -126,28 +126,41 @@ const login = async (req, res) => {
 const update = async (req, res) => {
   try {
     const {
-      body: { userId, name, email, password, phone, address },
+      body: { userId, name, email, password, phone, address, expDate, status },
     } = req;
     const userExist = await UserModel.findOne({ _id: userId }).lean();
     if (!userExist) {
       throw new Error("Email does not exist!");
     }
+    console.log(status);
     const encryptedPassword = await bcrypt.hash(password, 10);
+    const filePath = req.file.path;
+    const nameToEdit = name ? { name } : {};
+    const emailtoEdit = email ? { email } : {};
+    // const passwordToEdit = password ? { password } : {};
+    const phoneToEdit = phone ? { phone } : {};
+    const addressToEdit = address ? { address } : {};
+    const expDateToEdit = expDate ? { expDate } : {};
+    const statusToEdit = status ? { status } : {};
+    const filePathToEdit = filePath ? { filePath } : {};
     const updateUser = await UserModel.updateOne(
       { _id: userId },
       {
         $set: {
-          name: name,
-          email: email,
+          name: nameToEdit,
+          email: emailtoEdit,
           password: encryptedPassword,
-          phone: phone,
-          address: address,
-          image: req.file.path,
+          phone: phoneToEdit,
+          address: addressToEdit,
+          image: filePathToEdit,
+          expDate: expDateToEdit,
+          status: statusToEdit,
         },
       }
     );
     res.status(200).json({ updateUser });
   } catch (error) {
+    console.log(error);
     res.send({ error: error.message });
   }
 };
