@@ -59,6 +59,7 @@ const updateLiveTV = async (req, res) => {
     } = req.body;
     const filePath = req.file.path;
     const nameToEdit = TVName ? { TVName } : {};
+    const statustoEdit = status ? { status } : {};
     const descriptionToEdit = description ? { description } : {};
     const tVAccessToEdit = TVAccess ? { TVAccess } : {};
     const tVCategoryToEdit = TVCategory ? { TVCategory } : {};
@@ -75,6 +76,7 @@ const updateLiveTV = async (req, res) => {
           ...descriptionToEdit,
           ...tVAccessToEdit,
           ...tVCategoryToEdit,
+          ...statustoEdit,
           ...streamTypeToEdit,
           ...server1URLToEdit,
           ...server2URLToEdit,
@@ -109,7 +111,7 @@ const updateLiveTV = async (req, res) => {
 };
 const deleteLiveTV = async (req, res) => {
   try {
-    const { liveTVId } = req.params.id;
+    const { liveTVId } = req.params;
     if (!liveTVId) {
       return res.status(400).json({ message: "LiveTV ID is required." });
     }
@@ -143,6 +145,7 @@ const getAllLiveTVs = async (req, res) => {
   try {
     const liveTVs = await LiveTV.find().populate("TVCategory");
     res.json({ liveTVs });
+    console.log("ere");
   } catch (error) {
     console.error("Error fetching all LiveTVs:", error);
     res.status(500).json({ message: "Internal server error" });

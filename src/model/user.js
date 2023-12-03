@@ -4,7 +4,7 @@ const userSchema = mongoose.Schema(
   {
     userType: {
       type: String,
-      enum: ["user", "admin"],
+      enum: ["user", "admin", "subadmin"],
       default: "user",
     },
     googleId: {
@@ -19,9 +19,11 @@ const userSchema = mongoose.Schema(
       required: true,
       unique: true,
     },
+    phone: {
+      type: Number,
+    },
     password: {
       type: String,
-      required: true,
     },
     address: {
       type: String,
@@ -45,6 +47,10 @@ const userSchema = mongoose.Schema(
     expiryDate: {
       type: Date,
       default: null,
+    },
+    status: {
+      type: String,
+      enum: ["active", "inactive"],
     },
     packageId: {
       type: mongoose.Schema.Types.ObjectId,
