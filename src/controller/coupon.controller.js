@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const { CouponModel, UserModel, PaymentPackages } = require("../model");
 
 const createCoupon = async (req, res) => {
@@ -78,7 +79,7 @@ const availCoupon = async (req, res) => {
       code,
       status: true,
       numberOfUses: { $gte: 0 },
-      expiryDate: { $lte: date },
+      expiryDate: { $gte: date },
     }).lean();
 
     if (!coupon) {
