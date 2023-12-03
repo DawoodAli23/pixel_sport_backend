@@ -12,11 +12,9 @@ const paymentSchema = mongoose.Schema(
     },
     token: {
       type: String,
-      required: true,
     },
     sig: {
       type: String,
-      required: true,
     },
     status: {
       type: String,
