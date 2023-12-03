@@ -4,11 +4,11 @@ const paymentSchema = mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
+      ref: "User",
     },
     packageId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "paymentpackages",
+      ref: "PaymentPackages",
     },
     token: {
       type: String,
