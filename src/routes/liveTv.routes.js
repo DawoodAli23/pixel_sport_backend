@@ -7,6 +7,7 @@ const {
   deleteLiveTV,
   getLiveTVById,
   getAllLiveTVs,
+  getEvents,
 } = require("../controller/liveTV.controller");
 const tvlogo = multer({ storage: configureMulterStorage("TVlogo") });
 const router = express.Router();
@@ -15,4 +16,5 @@ router.post("/updateLiveTV", tvlogo.single("logo"), updateLiveTV);
 router.delete("/deleteLiveTV/:liveTVId", deleteLiveTV);
 router.get("/getLiveTVById/:liveTVId", getLiveTVById);
 router.get("/getAllLiveTVs", getAllLiveTVs);
+router.get("/events", getEvents);
 module.exports = router;
