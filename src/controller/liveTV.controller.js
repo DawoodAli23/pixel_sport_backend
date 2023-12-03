@@ -152,7 +152,14 @@ const getAllLiveTVs = async (req, res) => {
 
 const getEvents = async (req, res) => {
   try {
-    const events = await ChannelModel.find({}).populate("channel").lean();
+    const events = await ChannelModel.find({})
+      .populate({
+        path: "channel",
+        populate: {
+          path: "TVCategory",
+        },
+      })
+      .lean();
     res.json({
       events,
     });
