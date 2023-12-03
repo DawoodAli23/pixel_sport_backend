@@ -1,3 +1,4 @@
+const { ChannelModel } = require("../model");
 const LiveTV = require("../model/liveTv");
 const createLiveTV = async (req, res) => {
   try {
@@ -148,10 +149,29 @@ const getAllLiveTVs = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+const getEvents = async (req, res) => {
+  try {
+    const events = await ChannelModel.find({})
+      .populate({
+        path: "channel",
+        populate: {
+          path: "TVCategory",
+        },
+      })
+      .lean();
+    res.json({
+      events,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 module.exports = {
   createLiveTV,
   updateLiveTV,
   deleteLiveTV,
   getLiveTVById,
   getAllLiveTVs,
+  getEvents,
 };

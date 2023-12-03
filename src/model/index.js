@@ -5,4 +5,5 @@ module.exports = {
   CouponModel: require("./coupon"),
   CategoryModel: require("./category"),
   LiveTvModel: require("./liveTv"),
+  ChannelModel: require("./channels"),
 };
