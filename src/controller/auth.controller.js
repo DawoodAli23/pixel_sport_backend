@@ -12,7 +12,7 @@ const register = async (req, res) => {
     if (userExist) {
       throw new Error("Email is already taken");
     }
-    const encryptedPassword = await bcrypt.hash(password, 11);
+    const encryptedPassword = await bcrypt.hash(password, 10);
     const user = await UserModel.create({
       name,
       email,
@@ -29,28 +29,74 @@ const register = async (req, res) => {
     res.send({ error: error.message });
   }
 };
-const registerWithGoogle = async (req, res) => {
+const createUser = async (req, res) => {
   try {
     const {
-      body: { name, email, googleId },
+      body: {
+        name,
+        password,
+        email,
+        phone,
+        address,
+        expDate,
+        packageId,
+        status,
+      },
     } = req;
     const userExist = await UserModel.findOne({ email }).lean();
+
     if (userExist) {
       throw new Error("Email is already taken");
     }
+    const encryptedPassword = await bcrypt.hash(password, 10);
     const user = await UserModel.create({
       name,
       email,
-      googleId,
+      password: encryptedPassword,
+      phone,
+      address,
+      expDate,
+      packageId,
+      status,
+      image: req.file.path,
     });
-    delete user._doc["password"];
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-
     res.status(200).send({
       message: "Signed up successfully!",
-      data: { user, token },
+      data: { user },
     });
-  } catch (error) {}
+  } catch (error) {
+    res.send({ error: error.message });
+  }
+};
+const loginWithGoogle = async (req, res) => {
+  try {
+    const {
+      body: { name, email, googleId, imageUrl },
+    } = req;
+    console.log(req.body);
+    const userExist = await UserModel.findOne({ googleId: googleId });
+    if (userExist) {
+      const token = jwt.sign({ id: userExist._id }, process.env.JWT_SECRET);
+      res.status(200).send({
+        message: "Logged in successfully!",
+        data: { user: userExist, token },
+      });
+    } else {
+      const user = await UserModel.create({
+        name,
+        email,
+        googleId,
+        image: imageUrl,
+      });
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+      res.status(200).send({
+        message: "Signed up successfully!",
+        data: { user, token },
+      });
+    }
+  } catch (error) {
+    res.send({ error: error.message });
+  }
 };
 const login = async (req, res) => {
   try {
@@ -80,28 +126,41 @@ const login = async (req, res) => {
 const update = async (req, res) => {
   try {
     const {
-      body: { userId, name, email, password, phone, address },
+      body: { userId, name, email, password, phone, address, expDate, status },
     } = req;
     const userExist = await UserModel.findOne({ _id: userId }).lean();
     if (!userExist) {
       throw new Error("Email does not exist!");
     }
+    console.log(status);
     const encryptedPassword = await bcrypt.hash(password, 10);
+    const filePath = req.file.path;
+    const nameToEdit = name ? { name } : {};
+    const emailtoEdit = email ? { email } : {};
+    // const passwordToEdit = password ? { password } : {};
+    const phoneToEdit = phone ? { phone } : {};
+    const addressToEdit = address ? { address } : {};
+    const expDateToEdit = expDate ? { expDate } : {};
+    const statusToEdit = status ? { status } : {};
+    const filePathToEdit = filePath ? { filePath } : {};
     const updateUser = await UserModel.updateOne(
       { _id: userId },
       {
         $set: {
-          name: name,
-          email: email,
+          name: nameToEdit,
+          email: emailtoEdit,
           password: encryptedPassword,
-          phone: phone,
-          address: address,
-          image: req.file.path,
+          phone: phoneToEdit,
+          address: addressToEdit,
+          image: filePathToEdit,
+          expDate: expDateToEdit,
+          status: statusToEdit,
         },
       }
     );
     res.status(200).json({ updateUser });
   } catch (error) {
+    console.log(error);
     res.send({ error: error.message });
   }
 };
@@ -160,11 +219,23 @@ const codeverification = async (req, res) => {
     res.status(500).json({ err });
   }
 };
+const getAllUsers = async (req, res) => {
+  try {
+    const user = await UserModel.find({ userType: "user" });
+    res.status(200).send({
+      data: { user },
+    });
+  } catch (error) {
+    res.send({ error: error.message });
+  }
+};
 module.exports = {
   register,
   login,
   update,
-  registerWithGoogle,
+  loginWithGoogle,
   sendVerificationCode,
   codeverification,
+  createUser,
+  getAllUsers,
 };
