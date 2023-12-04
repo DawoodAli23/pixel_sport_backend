@@ -167,9 +167,32 @@ const freeTier = async (req, res) => {
     await PaymentModel.create({
       userId: user._id,
       packageId: new mongoose.Types.ObjectId("656a28b0dd38c3eebf3454af"),
+      status: "successfull",
     });
     res.status(200).send({
       message: "Free tier availed!",
+    });
+  } catch (error) {
+    res.send({ message: error.message });
+  }
+};
+
+const getPaymentsOfUser = async (req, res) => {
+  try {
+    const {
+      user: { _id },
+    } = req;
+    const payments = await PaymentModel.find({
+      userId: _id,
+      status: "successfull",
+    })
+      .sort({ createdAt: -1 })
+      .populate("packageId")
+      .populate("userId")
+      .lean();
+    res.status(200).send({
+      message: "Payments Fetched!",
+      data: payments,
     });
   } catch (error) {
     res.send({ message: error.message });
@@ -179,4 +202,5 @@ module.exports = {
   generatePaymentUrl,
   verifyPayment,
   freeTier,
+  getPaymentsOfUser,
 };

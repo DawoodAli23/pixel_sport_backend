@@ -170,6 +170,50 @@ const getEvents = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+const getEventById = async (req, res) => {
+  try {
+    const {
+      params: { id },
+    } = req;
+    const events = await ChannelModel.findOne({ _id: id })
+      .populate({
+        path: "channel",
+        populate: {
+          path: "TVCategory",
+        },
+      })
+      .lean();
+    res.json({
+      events,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const getEventByType = async (req, res) => {
+  try {
+    const {
+      params: { type },
+    } = req;
+    const events = await ChannelModel.find()
+      .populate({
+        path: "channel",
+        populate: {
+          path: "TVCategory",
+        },
+      })
+      .lean();
+    res.json({
+      events: events.filter((event) => {
+        return event.channel.TVCategory.name == type;
+      }),
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   createLiveTV,
   updateLiveTV,
@@ -177,4 +221,6 @@ module.exports = {
   getLiveTVById,
   getAllLiveTVs,
   getEvents,
+  getEventById,
+  getEventByType,
 };
