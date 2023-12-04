@@ -55,10 +55,10 @@ const createUser = async (req, res) => {
       password: encryptedPassword,
       phone,
       address,
-      expDate,
+      expiryDate: expDate,
       packageId,
       status,
-      image: req.file.path,
+      image: req?.file?.path,
     });
     res.status(200).send({
       message: "Signed up successfully!",
@@ -126,40 +126,52 @@ const login = async (req, res) => {
 const update = async (req, res) => {
   try {
     const {
-      body: { userId, name, email, password, phone, address, expDate, status },
+      body: {
+        userId,
+        name,
+        email,
+        password,
+        phone,
+        address,
+        expiryDate,
+        status,
+      },
     } = req;
     // console.log(req.body);
     const userExist = await UserModel.findOne({ _id: userId }).lean();
     if (!userExist) {
       throw new Error("Email does not exist!");
     }
-    console.log(expDate);
     const encryptedPassword = await bcrypt.hash(password, 10);
-    const filePath = req.file.path;
-    // const nameToEdit = name ? { name } : {};
-    // const emailtoEdit = email ? { email } : {};
-    // // const passwordToEdit = password ? { password } : {};
-    // const phoneToEdit = phone ? { phone } : {};
-    // const addressToEdit = address ? { address } : {};
-    // // const expDateToEdit = expDate ? { expDate } : {};
-    // // const statusToEdit = status ? { status } : {};
-    // const filePathToEdit = filePath ? { filePath } : {};
-    const inputDateTime = `${expDate}T00:00:00.000Z`;
+    const filePath = req?.file?.path;
+    const imageToEdit = filePath ? { image: filePath } : {};
+    const nameToEdit = name ? { name } : {};
+    const emailtoEdit = email ? { email } : {};
+    const passwordToEdit = password ? { password: encryptedPassword } : {};
+    const phoneToEdit = phone ? { phone } : {};
+    const addressToEdit = address ? { address } : {};
+    const statusToEdit = status ? { status } : {};
 
-    const formattedDate = new Date(inputDateTime);
-    console.log(formattedDate);
+    const expiryDateToEdit = {};
+    if (expiryDate) {
+      const inputDateTime = `${expiryDate}T00:00:00.000Z`;
+
+      const formattedDate = new Date(inputDateTime);
+      expiryDateToEdit["expiryDate"] = formattedDate;
+    }
+
     const updateUser = await UserModel.updateOne(
       { _id: userId },
       {
         $set: {
-          name: name,
-          email: email,
-          password: encryptedPassword,
-          phone: phone,
-          address: address,
-          image: filePath,
-          expDate: formattedDate,
-          status: status,
+          ...imageToEdit,
+          ...nameToEdit,
+          ...emailtoEdit,
+          ...passwordToEdit,
+          ...phoneToEdit,
+          ...addressToEdit,
+          ...expiryDateToEdit,
+          ...statusToEdit,
         },
       }
     );
@@ -292,19 +304,27 @@ const editSubAdmin = async (req, res) => {
     const { id, name, email, password, phone, adminType, status } = req.body;
     const userExist = await UserModel.findOne({ email }).lean();
     if (userExist) {
-      const filePath = req.file.path;
       const encryptedPassword = await bcrypt.hash(password, 10);
+      const filePath = req?.file?.path;
+      const imageToEdit = filePath ? { image: filePath } : {};
+      const nameToEdit = name ? { name } : {};
+      const emailtoEdit = email ? { email } : {};
+      const passwordToEdit = password ? { password: encryptedPassword } : {};
+      const phoneToEdit = phone ? { phone } : {};
+      const statusToEdit = status ? { status } : {};
+      const adminTypeToEdit = adminType ? { adminType } : {};
       const user = await UserModel.updateOne(
         { _id: id },
         {
           $set: {
-            name: name,
-            email: email,
-            password: encryptedPassword,
-            phone: phone,
-            status: status,
-            userType: adminType,
-            image: filePath,
+            ...imageToEdit,
+            ...nameToEdit,
+            ...emailtoEdit,
+            ...passwordToEdit,
+            ...passwordToEdit,
+            ...phoneToEdit,
+            ...statusToEdit,
+            ...adminTypeToEdit,
           },
         }
       );
