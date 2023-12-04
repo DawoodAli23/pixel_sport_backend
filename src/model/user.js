@@ -34,9 +34,7 @@ const userSchema = mongoose.Schema(
     startDate: {
       type: Date,
     },
-    expDate: {
-      type: Date,
-    },
+
     verifyCode: {
       type: String,
     },
@@ -51,6 +49,7 @@ const userSchema = mongoose.Schema(
     status: {
       type: String,
       enum: ["active", "inactive"],
+      default: "active",
     },
     packageId: {
       type: mongoose.Schema.Types.ObjectId,
