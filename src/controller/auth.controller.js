@@ -301,6 +301,7 @@ const addSubAdmin = async (req, res) => {
 };
 const editSubAdmin = async (req, res) => {
   try {
+    console.log("subadmin");
     const { id, name, email, password, phone, adminType, status } = req.body;
     const userExist = await UserModel.findOne({ email }).lean();
     if (userExist) {
