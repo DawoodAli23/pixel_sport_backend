@@ -128,37 +128,42 @@ const update = async (req, res) => {
     const {
       body: { userId, name, email, password, phone, address, expDate, status },
     } = req;
+    // console.log(req.body);
     const userExist = await UserModel.findOne({ _id: userId }).lean();
     if (!userExist) {
       throw new Error("Email does not exist!");
     }
-    console.log(status);
+    console.log(expDate);
     const encryptedPassword = await bcrypt.hash(password, 10);
     const filePath = req.file.path;
-    const nameToEdit = name ? { name } : {};
-    const emailtoEdit = email ? { email } : {};
-    // const passwordToEdit = password ? { password } : {};
-    const phoneToEdit = phone ? { phone } : {};
-    const addressToEdit = address ? { address } : {};
-    const expDateToEdit = expDate ? { expDate } : {};
-    const statusToEdit = status ? { status } : {};
-    const filePathToEdit = filePath ? { filePath } : {};
+    // const nameToEdit = name ? { name } : {};
+    // const emailtoEdit = email ? { email } : {};
+    // // const passwordToEdit = password ? { password } : {};
+    // const phoneToEdit = phone ? { phone } : {};
+    // const addressToEdit = address ? { address } : {};
+    // // const expDateToEdit = expDate ? { expDate } : {};
+    // // const statusToEdit = status ? { status } : {};
+    // const filePathToEdit = filePath ? { filePath } : {};
+    const inputDateTime = `${expDate}T00:00:00.000Z`;
+
+    const formattedDate = new Date(inputDateTime);
+    console.log(formattedDate);
     const updateUser = await UserModel.updateOne(
       { _id: userId },
       {
         $set: {
-          name: nameToEdit,
-          email: emailtoEdit,
+          name: name,
+          email: email,
           password: encryptedPassword,
-          phone: phoneToEdit,
-          address: addressToEdit,
-          image: filePathToEdit,
-          expDate: expDateToEdit,
-          status: statusToEdit,
+          phone: phone,
+          address: address,
+          image: filePath,
+          expDate: formattedDate,
+          status: status,
         },
       }
     );
-    res.status(200).json({ updateUser });
+    res.status(200).json({ data: updateUser });
   } catch (error) {
     console.log(error);
     res.send({ error: error.message });
@@ -229,6 +234,87 @@ const getAllUsers = async (req, res) => {
     res.send({ error: error.message });
   }
 };
+const getSpecificUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await UserModel.findOne({ _id: userId });
+    res.status(200).json({ user });
+  } catch (error) {
+    res.send({ error: error.message });
+  }
+};
+const deleteUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await UserModel.deleteOne({ _id: userId });
+    res.status(200).json(user);
+  } catch (error) {
+    res.send({ error: error.message });
+  }
+};
+const getSubAdmins = async (req, res) => {
+  try {
+    const user = await UserModel.find({ userType: "subadmin" });
+    res.status(200).json({ data: user });
+  } catch (error) {
+    res.send({ error: error.message });
+  }
+};
+const addSubAdmin = async (req, res) => {
+  try {
+    const {
+      body: { name, password, email, phone, adminType, status },
+    } = req;
+    const userExist = await UserModel.findOne({ email }).lean();
+    if (userExist) {
+      throw new Error("Email is already taken");
+    }
+    const filePath = req.file.path;
+    const encryptedPassword = await bcrypt.hash(password, 10);
+    const user = await UserModel.create({
+      name,
+      email,
+      userType: adminType,
+      phone,
+      status,
+      password: encryptedPassword,
+      image: filePath,
+    });
+    console.log(user);
+    res.status(200).json({ data: user });
+  } catch (error) {
+    console.log(error);
+    res.send({ error: error.message });
+  }
+};
+const editSubAdmin = async (req, res) => {
+  try {
+    const { id, name, email, password, phone, adminType, status } = req.body;
+    const userExist = await UserModel.findOne({ email }).lean();
+    if (userExist) {
+      const filePath = req.file.path;
+      const encryptedPassword = await bcrypt.hash(password, 10);
+      const user = await UserModel.updateOne(
+        { _id: id },
+        {
+          $set: {
+            name: name,
+            email: email,
+            password: encryptedPassword,
+            phone: phone,
+            status: status,
+            userType: adminType,
+            image: filePath,
+          },
+        }
+      );
+      res.status(200).json({ data: "succesful" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.send({ error: error.message });
+  }
+};
 module.exports = {
   register,
   login,
@@ -238,4 +324,9 @@ module.exports = {
   codeverification,
   createUser,
   getAllUsers,
+  getSpecificUser,
+  deleteUser,
+  getSubAdmins,
+  addSubAdmin,
+  editSubAdmin,
 };
