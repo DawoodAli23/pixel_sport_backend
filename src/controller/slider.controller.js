@@ -9,11 +9,13 @@ const createSlider = async (req, res) => {
         status,
         image: req.file.path,
       });
+      console.log(slider);
       res.status(200).json({ data: slider });
     } else {
       res.status(400).json({ message: "please provide image" });
     }
   } catch (error) {
+    console.log(error);
     res.send({ error: error.message });
   }
 };
