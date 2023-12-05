@@ -2,13 +2,13 @@ const bcrypt = require("bcrypt");
 var jwt = require("jsonwebtoken");
 const { UserModel } = require("../model");
 const crypto = require("crypto");
+const { emailSent } = require("../mail/mail");
 
 const register = async (req, res) => {
   try {
     const {
       body: { name, password, email },
     } = req;
-    const userExist = await UserModel.findOne({ email }).lean();
     if (userExist) {
       throw new Error("Email is already taken");
     }
@@ -198,7 +198,7 @@ const sendVerificationCode = async (req, res) => {
     <p>Your verification code is: <strong id="verificationCode">${verificationCode}</strong></p>
   </body>
   </html>`;
-    await emailSent(email, output);
+    await emailSent(email, output, "verification");
     await UserModel.updateOne(
       { email },
       { $set: { verifyCode: verificationCode } }
