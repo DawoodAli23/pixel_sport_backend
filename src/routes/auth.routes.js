@@ -11,6 +11,8 @@ const {
   getSubAdmins,
   addSubAdmin,
   editSubAdmin,
+  sendVerificationCode,
+  codeverification,
 } = require("../controller/auth.controller");
 const { configureMulterStorage } = require("../helper/multerConfig");
 const multer = require("multer");
@@ -27,5 +29,7 @@ router.delete("/deleteUser/:userId", deleteUser);
 router.get("/getSubAdmins", getSubAdmins);
 router.post("/addSubAdmin", profile.single("image"), addSubAdmin);
 router.post("/editSubAdmin", profile.single("image"), editSubAdmin);
+router.post("/sendVerificationCode", sendVerificationCode);
+router.post("/codeverification", codeverification);
 router.get("/test", sendMail);
 module.exports = router;

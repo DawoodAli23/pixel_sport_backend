@@ -25,6 +25,7 @@ const getwishListByUserID = async (req, res) => {
         },
       },
     });
+    console.log(wishlist);
     res.status(200).json({ data: wishlist });
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });

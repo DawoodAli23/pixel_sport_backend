@@ -181,14 +181,19 @@ const update = async (req, res) => {
     res.send({ error: error.message });
   }
 };
+function generateRandomNumber() {
+  // Generate a random number between 100000 and 999999
+  const randomNumber = Math.floor(Math.random() * 900000) + 100000;
+  return randomNumber;
+}
 const sendVerificationCode = async (req, res) => {
   try {
     const { email } = req.body;
     const user = await UserModel.findOne({ email: email });
     // const email = user.email;
-
-    let verificationCode = generateVerificationCode();
-    const output = `<!DOCTYPE html>
+    if (user) {
+      let verificationCode = generateRandomNumber();
+      const output = `<!DOCTYPE html>
   <html>
   <head>
     <title>Verification Code</title>
@@ -198,14 +203,18 @@ const sendVerificationCode = async (req, res) => {
     <p>Your verification code is: <strong id="verificationCode">${verificationCode}</strong></p>
   </body>
   </html>`;
-    await emailSent(email, output, "verification");
-    await UserModel.updateOne(
-      { email },
-      { $set: { verifyCode: verificationCode } }
-    );
-    res.status(200).json({ message: "email sent succesfully" });
-  } catch (err) {
-    res.status(400).json({ err });
+      await emailSent(email, output, "verification");
+      await UserModel.updateOne(
+        { email },
+        { $set: { verifyCode: verificationCode } }
+      );
+      res.status(200).json({ message: "email sent succesfully" });
+    } else {
+      res.status(400).json({ message: "user not found" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
   }
 };
 const codeverification = async (req, res) => {
