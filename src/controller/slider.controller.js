@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const Slider = require("../model/slider");
 const createSlider = async (req, res) => {
   try {
@@ -21,7 +22,7 @@ const createSlider = async (req, res) => {
 };
 const getSliders = async (req, res) => {
   try {
-    const slider = await Slider.find();
+    const slider = await Slider.find().populate("liveTV");
     res.status(200).json({ data: slider });
   } catch (error) {
     res.send({ error: error.message });
@@ -63,6 +64,20 @@ const getSpecificSlider = async (req, res) => {
     res.send({ error: error.message });
   }
 };
+
+const getSpecificSliderDetail = async (req, res) => {
+  try {
+    const { sliderId } = req.params;
+    const slider = await Slider.findOne({
+      _id: new mongoose.Types.ObjectId(sliderId),
+    })
+      .populate("liveTV")
+      .lean();
+    res.status(200).json({ data: slider });
+  } catch (error) {
+    res.send({ error: error.message });
+  }
+};
 const deleteSlider = async (req, res) => {
   try {
     const { sliderId } = req.params;
@@ -78,4 +93,5 @@ module.exports = {
   editSlider,
   getSpecificSlider,
   deleteSlider,
+  getSpecificSliderDetail,
 };

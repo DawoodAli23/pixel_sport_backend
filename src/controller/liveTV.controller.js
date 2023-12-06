@@ -214,6 +214,37 @@ const getEventByType = async (req, res) => {
   }
 };
 
+const deleteEvent = async (req, res) => {
+  try {
+    const {
+      params: { id },
+    } = req;
+    const events = await ChannelModel.deleteOne({ _id: id });
+
+    res.json({
+      message: "Event Deleted",
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const editEvent = async (req, res) => {
+  try {
+    const {
+      params: { id },
+      body: { liveTv },
+    } = req;
+    await ChannelModel.findOneAndUpdate({ _id: id }, { channel: liveTv });
+
+    res.json({
+      message: "Event Updated",
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   createLiveTV,
   updateLiveTV,
@@ -223,4 +254,6 @@ module.exports = {
   getEvents,
   getEventById,
   getEventByType,
+  deleteEvent,
+  editEvent,
 };

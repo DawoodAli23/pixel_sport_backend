@@ -11,6 +11,7 @@ const sliderSchema = new mongoose.Schema({
   },
   liveTV: {
     type: mongoose.Types.ObjectId,
+    ref: "LiveTV",
     required: true,
   },
   status: {

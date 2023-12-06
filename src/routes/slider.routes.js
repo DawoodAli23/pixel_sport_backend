@@ -7,6 +7,7 @@ const {
   getSliders,
   getSpecificSlider,
   deleteSlider,
+  getSpecificSliderDetail,
 } = require("../controller/slider.controller");
 const slider = multer({ storage: configureMulterStorage("slider") });
 const router = express.Router();
@@ -14,5 +15,6 @@ router.post("/createSlider", slider.single("image"), createSlider);
 router.post("/editSlider", slider.single("image"), editSlider);
 router.get("/getSliders", getSliders);
 router.get("/getSpecificSlider/:sliderId", getSpecificSlider);
+router.get("/detail/:sliderId", getSpecificSliderDetail);
 router.delete("/deleteSlider/:sliderId", deleteSlider);
 module.exports = router;
