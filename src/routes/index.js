@@ -8,6 +8,7 @@ const liveTvRoutes = require("./liveTv.routes");
 const couponRoutes = require("./coupon.routes");
 const transactionRoutes = require("./transactions.routes");
 const sliderRoutes = require("./slider.routes");
+const wishlistRoutes = require("./wishList.routes");
 const { userMiddleware, adminMiddleware } = require("../middleware/jwt");
 router
   .use("/auth", authRoutes)
@@ -17,5 +18,6 @@ router
   .use("/liveTV", liveTvRoutes)
   .use("/coupon", userMiddleware, couponRoutes)
   .use("/transactions", userMiddleware, transactionRoutes)
-  .use("/slider", sliderRoutes);
+  .use("/slider", sliderRoutes)
+  .use("/wishList", userMiddleware, wishlistRoutes);
 module.exports = router;
