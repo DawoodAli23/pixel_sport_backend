@@ -2,13 +2,13 @@ const bcrypt = require("bcrypt");
 var jwt = require("jsonwebtoken");
 const { UserModel } = require("../model");
 const crypto = require("crypto");
+const { emailSent } = require("../mail/mail");
 
 const register = async (req, res) => {
   try {
     const {
       body: { name, password, email },
     } = req;
-    const userExist = await UserModel.findOne({ email }).lean();
     if (userExist) {
       throw new Error("Email is already taken");
     }
@@ -73,8 +73,8 @@ const loginWithGoogle = async (req, res) => {
     const {
       body: { name, email, googleId, imageUrl },
     } = req;
-    console.log(req.body);
-    const userExist = await UserModel.findOne({ googleId: googleId });
+
+    const userExist = await UserModel.findOne({ email: email });
     if (userExist) {
       const token = jwt.sign({ id: userExist._id }, process.env.JWT_SECRET);
       res.status(200).send({
@@ -181,14 +181,19 @@ const update = async (req, res) => {
     res.send({ error: error.message });
   }
 };
+function generateRandomNumber() {
+  // Generate a random number between 100000 and 999999
+  const randomNumber = Math.floor(Math.random() * 900000) + 100000;
+  return randomNumber;
+}
 const sendVerificationCode = async (req, res) => {
   try {
     const { email } = req.body;
     const user = await UserModel.findOne({ email: email });
     // const email = user.email;
-
-    let verificationCode = generateVerificationCode();
-    const output = `<!DOCTYPE html>
+    if (user) {
+      let verificationCode = generateRandomNumber();
+      const output = `<!DOCTYPE html>
   <html>
   <head>
     <title>Verification Code</title>
@@ -198,14 +203,18 @@ const sendVerificationCode = async (req, res) => {
     <p>Your verification code is: <strong id="verificationCode">${verificationCode}</strong></p>
   </body>
   </html>`;
-    await emailSent(email, output);
-    await UserModel.updateOne(
-      { email },
-      { $set: { verifyCode: verificationCode } }
-    );
-    res.status(200).json({ message: "email sent succesfully" });
-  } catch (err) {
-    res.status(400).json({ err });
+      await emailSent(email, output, "verification");
+      await UserModel.updateOne(
+        { email },
+        { $set: { verifyCode: verificationCode } }
+      );
+      res.status(200).json({ message: "email sent succesfully" });
+    } else {
+      res.status(400).json({ message: "user not found" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
   }
 };
 const codeverification = async (req, res) => {
@@ -301,6 +310,7 @@ const addSubAdmin = async (req, res) => {
 };
 const editSubAdmin = async (req, res) => {
   try {
+    console.log("subadmin");
     const { id, name, email, password, phone, adminType, status } = req.body;
     const userExist = await UserModel.findOne({ email }).lean();
     if (userExist) {

@@ -11,11 +11,14 @@ const {
   getSubAdmins,
   addSubAdmin,
   editSubAdmin,
+  sendVerificationCode,
+  codeverification,
 } = require("../controller/auth.controller");
 const { configureMulterStorage } = require("../helper/multerConfig");
 const multer = require("multer");
 const router = express.Router();
 const profile = multer({ storage: configureMulterStorage("profile") });
+const { sendMail } = require("../jobs/sendExpiredMails");
 router.post("/signup", register).post("/login", login);
 router.post("/updateProfile", profile.single("image"), update);
 router.post("/loginWithGoogle", loginWithGoogle);
@@ -26,4 +29,7 @@ router.delete("/deleteUser/:userId", deleteUser);
 router.get("/getSubAdmins", getSubAdmins);
 router.post("/addSubAdmin", profile.single("image"), addSubAdmin);
 router.post("/editSubAdmin", profile.single("image"), editSubAdmin);
+router.post("/sendVerificationCode", sendVerificationCode);
+router.post("/codeverification", codeverification);
+router.get("/test", sendMail);
 module.exports = router;

@@ -6,6 +6,7 @@ require("dotenv").config();
 require("./src/config/connection")();
 const cors = require("cors");
 const createChannels = require("./src/jobs/createChannels");
+const { sendMail } = require("./src/jobs/sendExpiredMails");
 app.use(express.static(path.join(__dirname, "uploads")));
 app.use(cors());
 app.use(express.json());
@@ -16,4 +17,8 @@ app.listen(process.env.PORT, () => {
 
 cron.schedule("0 0 * * *", () => {
   createChannels();
+});
+
+cron.schedule("0 0 * * *", () => {
+  sendMail();
 });
