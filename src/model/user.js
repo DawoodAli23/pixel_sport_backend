@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema(
   {
-    userType: {
+    usertype: {
       type: String,
       enum: ["user", "admin", "subadmin"],
       default: "user",

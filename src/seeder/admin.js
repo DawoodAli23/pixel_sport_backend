@@ -11,7 +11,7 @@ const seedDatabase = async () => {
     // Create an array of PaymentPackages
     const admin = [
       new UserModel({
-        userType: "admin",
+        usertype: "admin",
         name: "Pixel Sport",
         email: "main@admin.com",
         password:

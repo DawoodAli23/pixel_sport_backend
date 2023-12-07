@@ -19,7 +19,9 @@ const register = async (req, res) => {
       password: encryptedPassword,
     });
     delete user._doc["password"];
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "365d",
+    });
 
     res.status(200).send({
       message: "Signed up successfully!",
@@ -76,7 +78,9 @@ const loginWithGoogle = async (req, res) => {
 
     const userExist = await UserModel.findOne({ email: email });
     if (userExist) {
-      const token = jwt.sign({ id: userExist._id }, process.env.JWT_SECRET);
+      const token = jwt.sign({ id: userExist._id }, process.env.JWT_SECRET, {
+        expiresIn: "365d",
+      });
       res.status(200).send({
         message: "Logged in successfully!",
         data: { user: userExist, token },
@@ -88,7 +92,9 @@ const loginWithGoogle = async (req, res) => {
         googleId,
         image: imageUrl,
       });
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: "365d",
+      });
       res.status(200).send({
         message: "Signed up successfully!",
         data: { user, token },
@@ -112,7 +118,9 @@ const login = async (req, res) => {
       throw new Error("Email or password mismatch!");
     }
     delete userExist["password"];
-    const token = jwt.sign({ id: userExist._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ id: userExist._id }, process.env.JWT_SECRET, {
+      expiresIn: "365d",
+    });
 
     res.status(200).send({
       message: "Logged in successfully!",
@@ -247,7 +255,31 @@ const codeverification = async (req, res) => {
 };
 const getAllUsers = async (req, res) => {
   try {
-    const user = await UserModel.find({ userType: "user" });
+    const {
+      params: { skip },
+      query: { searchString },
+    } = req;
+    let user;
+    if (searchString) {
+      user = await UserModel.find({
+        usertype: "user",
+        $or: [
+          { name: { $options: "i", $regex: searchString } },
+          { email: { $options: "i", $regex: searchString } },
+        ],
+      })
+        .skip(skip)
+        .limit(20)
+        .lean();
+    } else {
+      user = await UserModel.find({
+        usertype: "user",
+      })
+        .skip(skip)
+        .limit(20)
+        .lean();
+    }
+
     res.status(200).send({
       data: { user },
     });
@@ -275,7 +307,7 @@ const deleteUser = async (req, res) => {
 };
 const getSubAdmins = async (req, res) => {
   try {
-    const user = await UserModel.find({ userType: "subadmin" });
+    const user = await UserModel.find({ usertype: "subadmin" });
     res.status(200).json({ data: user });
   } catch (error) {
     res.send({ error: error.message });
@@ -295,7 +327,7 @@ const addSubAdmin = async (req, res) => {
     const user = await UserModel.create({
       name,
       email,
-      userType: adminType,
+      usertype: adminType,
       phone,
       status,
       password: encryptedPassword,

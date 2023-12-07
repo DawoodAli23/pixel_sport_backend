@@ -14,6 +14,8 @@ const {
   sendVerificationCode,
   codeverification,
 } = require("../controller/auth.controller");
+const { userMiddleware, adminMiddleware } = require("../middleware/jwt");
+
 const { configureMulterStorage } = require("../helper/multerConfig");
 const multer = require("multer");
 const router = express.Router();
@@ -22,7 +24,7 @@ const { sendMail } = require("../jobs/sendExpiredMails");
 router.post("/signup", register).post("/login", login);
 router.post("/updateProfile", profile.single("image"), update);
 router.post("/loginWithGoogle", loginWithGoogle);
-router.get("/getAllUsers", getAllUsers);
+router.get("/getAllUsers/:skip", userMiddleware, adminMiddleware, getAllUsers);
 router.post("/createUser", profile.single("image"), createUser);
 router.get("/getSpecificUser/:userId", getSpecificUser);
 router.delete("/deleteUser/:userId", deleteUser);

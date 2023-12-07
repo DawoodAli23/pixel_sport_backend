@@ -20,9 +20,9 @@ const userMiddleware = async (req, res, next) => {
 const adminMiddleware = async (req, res, next) => {
   try {
     const {
-      user: { userType },
+      user: { usertype },
     } = req;
-    if (userType == "admin") {
+    if (usertype == "admin") {
       return next();
     }
     throw new Error("");
