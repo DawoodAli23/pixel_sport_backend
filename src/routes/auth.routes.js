@@ -15,6 +15,7 @@ const {
   codeverification,
   getPaymentsByDateRange,
   getDetails,
+  getUserDetail,
 } = require("../controller/auth.controller");
 const { userMiddleware, adminMiddleware } = require("../middleware/jwt");
 
@@ -36,6 +37,12 @@ router.post("/addSubAdmin", profile.single("image"), addSubAdmin);
 router.post("/editSubAdmin", profile.single("image"), editSubAdmin);
 router.post("/sendVerificationCode", sendVerificationCode);
 router.post("/codeverification", codeverification);
-router.get("/getPaymentsByDateRange", getPaymentsByDateRange);
+router.get(
+  "/getPaymentsByDateRange",
+  userMiddleware,
+  adminMiddleware,
+  getPaymentsByDateRange
+);
 router.get("/test", sendMail);
+router.get("/getuserdetails/:id", userMiddleware, getUserDetail);
 module.exports = router;

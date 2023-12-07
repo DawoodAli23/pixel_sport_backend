@@ -457,6 +457,27 @@ const getDetails = async (req, res) => {
     res.send({ error: error.message });
   }
 };
+
+const getUserDetail = async (req, res) => {
+  try {
+    const {
+      params: { id },
+    } = req;
+    const user = await UserModel.findOne({ _id: id }).lean();
+    const payments = await PaymentModel.find({ userId: id })
+      .populate("packageId")
+      .lean();
+    res.send({
+      message: "Data fetched!",
+      data: {
+        user,
+        payments,
+      },
+    });
+  } catch (error) {
+    res.send({ error: error.message });
+  }
+};
 module.exports = {
   register,
   login,
@@ -472,4 +493,6 @@ module.exports = {
   addSubAdmin,
   editSubAdmin,
   getPaymentsByDateRange,
+  getDetails,
+  getUserDetail,
 };
