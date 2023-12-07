@@ -18,14 +18,14 @@ const generatePaymentUrl = async (req, res) => {
     const package = await PaymentPackages.findById(package_id).lean();
     const body = {
       amount: package.amount,
-      cancelUrl: "https://google.com",
+      cancelUrl: "http://37.49.230.117/membership_plan",
       currencyCode: "USD",
       item_0_name: package_id,
       merchantName: process.env.MERCHANT_USERNAME,
       merchantReferenceCode: timestamp,
       merchantSecretKey: process.env.TEST_PAYMENT_SECRET_KEY,
       merchantToken: timestamp,
-      returnUrl: "https://facebook.com",
+      returnUrl: "http://37.49.230.117/membership_plan",
     };
     const concatenatedString = generateConcatenatedString(body);
     const fullURL = concatenateWithEndpoint(

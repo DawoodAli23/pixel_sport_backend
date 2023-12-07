@@ -377,6 +377,19 @@ const editSubAdmin = async (req, res) => {
     res.send({ error: error.message });
   }
 };
+
+const getDetails = async (req, res) => {
+  try {
+    const {
+      user: { _id },
+    } = req;
+    const user = await UserModel.findOne({ _id }).lean();
+    delete user["password"];
+    res.send({ user });
+  } catch (error) {
+    res.send({ error: error.message });
+  }
+};
 module.exports = {
   register,
   login,
@@ -391,4 +404,5 @@ module.exports = {
   getSubAdmins,
   addSubAdmin,
   editSubAdmin,
+  getDetails,
 };
