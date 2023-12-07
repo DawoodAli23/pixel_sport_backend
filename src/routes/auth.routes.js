@@ -14,6 +14,7 @@ const {
   sendVerificationCode,
   codeverification,
   getPaymentsByDateRange,
+  getDetails,
 } = require("../controller/auth.controller");
 const { userMiddleware, adminMiddleware } = require("../middleware/jwt");
 
@@ -24,6 +25,7 @@ const profile = multer({ storage: configureMulterStorage("profile") });
 const { sendMail } = require("../jobs/sendExpiredMails");
 router.post("/signup", register).post("/login", login);
 router.post("/updateProfile", profile.single("image"), update);
+router.post("/get", userMiddleware, getDetails);
 router.post("/loginWithGoogle", loginWithGoogle);
 router.get("/getAllUsers/:skip", userMiddleware, adminMiddleware, getAllUsers);
 router.post("/createUser", profile.single("image"), createUser);
