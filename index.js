@@ -7,7 +7,7 @@ require("./src/config/connection")();
 const cors = require("cors");
 const createChannels = require("./src/jobs/createChannels");
 const { sendMail } = require("./src/jobs/sendExpiredMails");
-app.use(express.static(path.join(__dirname, "uploads")));
+app.use("/backend", express.static(path.join(__dirname, "uploads")));
 app.use(cors());
 app.use(express.json());
 app.use(require("./src/routes"));
