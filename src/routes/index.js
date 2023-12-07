@@ -11,13 +11,13 @@ const sliderRoutes = require("./slider.routes");
 const wishlistRoutes = require("./wishList.routes");
 const { userMiddleware, adminMiddleware } = require("../middleware/jwt");
 router
-  .use("/auth", authRoutes)
-  .use("/payment", userMiddleware, paymentRoutes)
-  .use("/packages", paymentPackagesRoutes)
-  .use("/category", categoryRoutes)
-  .use("/liveTV", liveTvRoutes)
-  .use("/coupon", userMiddleware, couponRoutes)
-  .use("/transactions", userMiddleware, transactionRoutes)
-  .use("/slider", sliderRoutes)
-  .use("/wishList", userMiddleware, wishlistRoutes);
+  .use("/backend/auth", authRoutes)
+  .use("/backend/payment", userMiddleware, paymentRoutes)
+  .use("/backend/packages", paymentPackagesRoutes)
+  .use("/backend/category", categoryRoutes)
+  .use("/backend/liveTV", liveTvRoutes)
+  .use("/backend/coupon", userMiddleware, couponRoutes)
+  .use("/backend/transactions", userMiddleware, transactionRoutes)
+  .use("/backend/slider", sliderRoutes)
+  .use("/backend/wishList", userMiddleware, wishlistRoutes);
 module.exports = router;
