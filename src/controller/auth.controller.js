@@ -1,8 +1,71 @@
 const bcrypt = require("bcrypt");
 var jwt = require("jsonwebtoken");
 const { UserModel } = require("../model");
+const LiveTV = require("../model/liveTv");
 const crypto = require("crypto");
 const { emailSent } = require("../mail/mail");
+const { PaymentModel } = require("../model");
+const moment = require("moment");
+const calculatePayment = (array) => {
+  let amount = 0;
+  for (let i = 0; i < array.length; i++) {
+    amount += array[i]?.packageId?.amount || 0;
+  }
+  return amount;
+};
+const getPaymentsByDateRange = async (req, res) => {
+  try {
+    const today = moment().startOf("day");
+    const thisWeek = moment().startOf("week");
+    const thisMonth = moment().startOf("month");
+    const thisYear = moment().startOf("year");
+    const liveTv = await LiveTV.countDocuments({});
+    const Users = await UserModel.countDocuments({});
+    const Transactions = await PaymentModel.countDocuments({});
+    const paymentsToday = await PaymentModel.find({
+      createdAt: {
+        $gte: today.toDate(),
+        $lt: moment(today).endOf("day").toDate(),
+      },
+    }).populate("packageId");
+    const todayAmount = calculatePayment(paymentsToday);
+    const paymentsThisWeek = await PaymentModel.find({
+      createdAt: {
+        $gte: thisWeek.toDate(),
+        $lt: moment(thisWeek).endOf("week").toDate(),
+      },
+    }).populate("packageId");
+    const weekAmount = calculatePayment(paymentsThisWeek);
+
+    const paymentsThisMonth = await PaymentModel.find({
+      createdAt: {
+        $gte: thisMonth.toDate(),
+        $lt: moment(thisMonth).endOf("month").toDate(),
+      },
+    }).populate("packageId");
+    const monthAmount = calculatePayment(paymentsThisMonth);
+
+    const paymentsThisYear = await PaymentModel.find({
+      createdAt: {
+        $gte: thisYear.toDate(),
+        $lt: moment(thisYear).endOf("year").toDate(),
+      },
+    }).populate("packageId");
+    const yearAmount = calculatePayment(paymentsThisYear);
+
+    res.status(200).json({
+      Users,
+      liveTv,
+      todayAmount,
+      Transactions,
+      weekAmount,
+      monthAmount,
+      yearAmount,
+    });
+  } catch (error) {
+    res.send({ error: error.message });
+  }
+};
 
 const register = async (req, res) => {
   try {
@@ -377,6 +440,10 @@ const editSubAdmin = async (req, res) => {
     res.send({ error: error.message });
   }
 };
+const getStats = async (req, res) => {
+  try {
+  } catch (error) {}
+};
 module.exports = {
   register,
   login,
@@ -391,4 +458,5 @@ module.exports = {
   getSubAdmins,
   addSubAdmin,
   editSubAdmin,
+  getPaymentsByDateRange,
 };
