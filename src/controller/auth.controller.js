@@ -465,6 +465,7 @@ const getUserDetail = async (req, res) => {
     } = req;
     const user = await UserModel.findOne({ _id: id }).lean();
     const payments = await PaymentModel.find({ userId: id })
+      .sort({ createdAt: -1 })
       .populate("packageId")
       .lean();
     res.send({
