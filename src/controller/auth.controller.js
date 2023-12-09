@@ -72,6 +72,7 @@ const register = async (req, res) => {
     const {
       body: { name, password, email },
     } = req;
+    const userExist = await UserModel.findOne({ email }).lean();
     if (userExist) {
       throw new Error("Email is already taken");
     }
