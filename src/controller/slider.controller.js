@@ -45,6 +45,10 @@ const editSlider = async (req, res) => {
           ...statusToEdit,
           ...filePathToEdit,
         },
+      },
+      {
+        returnOriginal: false,
+        returnDocument: true,
       }
     );
     res.status(200).json({
