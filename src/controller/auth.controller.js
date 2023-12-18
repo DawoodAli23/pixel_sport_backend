@@ -355,7 +355,7 @@ const getSpecificUser = async (req, res) => {
   try {
     const { userId } = req.params;
     const user = await UserModel.findOne({ _id: userId });
-    res.status(200).json({ data:user });
+    res.status(200).json({ data: user });
   } catch (error) {
     res.send({ error: error.message });
   }
