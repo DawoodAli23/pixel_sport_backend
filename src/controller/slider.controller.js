@@ -35,7 +35,7 @@ const editSlider = async (req, res) => {
     const titleToEdit = title ? { title } : {};
     const liveTVtoEdit = liveTV ? { liveTV } : {};
     const statusToEdit = status ? { status } : {};
-    const filePathToEdit = filePath ? { filePath } : {};
+    const filePathToEdit = filePath ? { image: filePath } : {};
     const existingSlider = await Slider.updateOne(
       { _id: id },
       {
