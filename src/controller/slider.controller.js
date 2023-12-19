@@ -31,7 +31,7 @@ const getSliders = async (req, res) => {
 const editSlider = async (req, res) => {
   try {
     const { id, title, liveTV, status } = req.body;
-    const filePath = req.file.path;
+    const filePath = req?.file?.path;
     const titleToEdit = title ? { title } : {};
     const liveTVtoEdit = liveTV ? { liveTV } : {};
     const statusToEdit = status ? { status } : {};
