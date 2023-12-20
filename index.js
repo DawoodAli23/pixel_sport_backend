@@ -22,3 +22,4 @@ cron.schedule("0 0 * * *", () => {
 cron.schedule("0 0 * * *", () => {
   sendMail();
 });
+// createChannels();

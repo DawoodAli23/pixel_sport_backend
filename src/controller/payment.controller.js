@@ -201,8 +201,28 @@ const getPaymentsOfUser = async (req, res) => {
     res.send({ message: error.message });
   }
 };
+
+const canView = async (req, res) => {
+  try {
+    const {
+      user: { expiryDate },
+    } = req;
+    if (!expiryDate) {
+      return res.send({
+        flag: false,
+      });
+    }
+    res.send({
+      flag: +new Date() < +new Date(expiryDate),
+    });
+  } catch (error) {
+    res.send({ message: error.message });
+  }
+};
+
 module.exports = {
   generatePaymentUrl,
+  canView,
   verifyPayment,
   freeTier,
   getPaymentsOfUser,
