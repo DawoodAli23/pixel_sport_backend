@@ -60,7 +60,7 @@ const updateLiveTV = async (req, res) => {
       server3URL,
       liveTVId,
     } = req.body;
-    const filePath = req.file.path;
+    const filePath = req?.file?.path;
     const nameToEdit = TVName ? { TVName } : {};
     const statustoEdit = status ? { status } : {};
     const descriptionToEdit = description ? { description } : {};
