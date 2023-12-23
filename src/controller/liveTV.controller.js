@@ -1,3 +1,4 @@
+const createChannels = require("../jobs/createChannels");
 const { ChannelModel } = require("../model");
 const LiveTV = require("../model/liveTv");
 const createLiveTV = async (req, res) => {
@@ -35,6 +36,7 @@ const createLiveTV = async (req, res) => {
       server3URL,
       TVLogo: req.file.path,
     });
+    createChannels();
     await newLiveTV.save();
     res
       .status(201)
