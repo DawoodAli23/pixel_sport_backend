@@ -70,7 +70,7 @@ const updateLiveTV = async (req, res) => {
     const server1URLToEdit = server1URL ? { server1URL } : {};
     const server2URLToEdit = server2URL ? { server2URL } : {};
     const server3URLToEdit = server3URL ? { server3URL } : {};
-    const filePathToEdit = filePath ? { filePath } : {};
+    const filePathToEdit = filePath ? { TVLogo: filePath } : {};
     const existingLiveTV = await LiveTV.updateOne(
       { _id: liveTVId },
       {
