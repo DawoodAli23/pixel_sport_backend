@@ -14,12 +14,13 @@ app.use(require("./src/routes"));
 app.listen(process.env.PORT, () => {
   console.log(`Server is running at PORT ${process.env.PORT}`);
 });
+process.env.TZ = "GMT";
 
-cron.schedule("0 0 * * *", () => {
+cron.schedule("0 9 * * *", () => {
   createChannels();
 });
 
-cron.schedule("0 0 * * *", () => {
+cron.schedule("0 9 * * *", () => {
   sendMail();
 });
 // createChannels();

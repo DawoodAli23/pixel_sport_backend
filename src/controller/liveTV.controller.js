@@ -148,7 +148,6 @@ const getAllLiveTVs = async (req, res) => {
   try {
     const liveTVs = await LiveTV.find().populate("TVCategory");
     res.json({ liveTVs });
-    console.log("ere");
   } catch (error) {
     console.error("Error fetching all LiveTVs:", error);
     res.status(500).json({ message: "Internal server error" });
