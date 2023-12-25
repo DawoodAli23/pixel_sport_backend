@@ -371,7 +371,7 @@ const deleteUser = async (req, res) => {
 };
 const getSubAdmins = async (req, res) => {
   try {
-    const user = await UserModel.find({ usertype: "subadmin" });
+    const user = await UserModel.find({ usertype: "admin" });
     res.status(200).json({ data: user });
   } catch (error) {
     res.send({ error: error.message });
