@@ -10,7 +10,7 @@ const userMiddleware = async (req, res, next) => {
     } = req;
     const decodedToken = jwt.decode(token, process.env.JWT_SECRET);
     const user = await UserModel.findById(decodedToken.id).lean();
-    console.log(user);
+    console.log(decodedToken.id);
     req.user = user;
     return next();
   } catch (error) {
