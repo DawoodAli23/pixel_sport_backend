@@ -15,6 +15,13 @@ const generatePaymentUrl = async (req, res) => {
       user,
       body: { package_id },
     } = req;
+    if (user.expiryDate) {
+      if (+new Date() > +new Date(user.expiryDate)) {
+        throw new Error(
+          "You already have an active subscription, you cannot subscribe again!"
+        );
+      }
+    }
     const timestamp = new Date().toISOString();
     const package = await PaymentPackages.findById(package_id).lean();
     const body = {
