@@ -30,14 +30,14 @@ const generatePaymentUrl = async (req, res) => {
     };
     const concatenatedString = generateConcatenatedString(body);
     const fullURL = concatenateWithEndpoint(
-      process.env.TEST_MODE,
+      process.env.LIVE_MODE,
       concatenatedString
     );
     body["sig"] = generateHmacSha512(
       fullURL,
       process.env.TEST_PAYMENT_SECRET_KEY
     );
-    const token = await axios.post(process.env.TEST_MODE, body, {
+    const token = await axios.post(process.env.LIVE_MODE, body, {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
@@ -82,7 +82,7 @@ const verifyPayment = async (req, res) => {
     };
     const concatenatedString = generateConcatenatedString(body);
     const fullURL = concatenateWithEndpoint(
-      process.env.TEST_MODE_DETAILS,
+      process.env.LIVE_MODE_DETAILS,
       concatenatedString
     );
     body["sig"] = generateHmacSha512(
@@ -90,7 +90,7 @@ const verifyPayment = async (req, res) => {
       process.env.TEST_PAYMENT_SECRET_KEY
     );
     const paymentDetails = await axios.post(
-      process.env.TEST_MODE_DETAILS,
+      process.env.LIVE_MODE_DETAILS,
       body,
       {
         headers: {
