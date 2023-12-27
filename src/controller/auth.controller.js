@@ -326,7 +326,10 @@ const getAllUsers = async (req, res) => {
     if (searchString) {
       user = await UserModel.find({
         usertype: "user",
-        $or: [{ name: `/${searchString}/` }, { email: `/${searchString}/` }],
+        $or: [
+          { name: { $regex: searchString, $options: "i" } },
+          { email: { $regex: searchString, $options: "i" } },
+        ],
       })
         .skip(skip)
         .limit(20)
