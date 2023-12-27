@@ -226,8 +226,6 @@ const update = async (req, res) => {
 
     const expiryDateToEdit = {};
     if (expiryDate) {
-      const inputDateTime = `${expiryDate}T00:00:00.000Z`;
-
       const formattedDate = new Date(inputDateTime);
       expiryDateToEdit["expiryDate"] = formattedDate;
     }
