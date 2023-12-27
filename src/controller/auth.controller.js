@@ -220,7 +220,7 @@ const update = async (req, res) => {
     const nameToEdit = name ? { name } : {};
     const emailtoEdit = email ? { email } : {};
     const passwordToEdit = password ? { password: encryptedPassword } : {};
-    const phoneToEdit = phone ? { phone } : {};
+    const phoneToEdit = phone != "null" && phone ? { phone } : {};
     const addressToEdit = address ? { address } : {};
     const statusToEdit = status ? { status } : {};
 
