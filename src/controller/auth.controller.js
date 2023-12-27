@@ -415,7 +415,8 @@ const editSubAdmin = async (req, res) => {
       const nameToEdit = name ? { name } : {};
       const emailtoEdit = email ? { email } : {};
       const passwordToEdit = password ? { password: encryptedPassword } : {};
-      const phoneToEdit = phone ? { phone } : {};
+      const phoneToEdit =
+        phone != "null" && phone != "undefined" ? { phone } : {};
       const statusToEdit = status ? { status } : {};
       const adminTypeToEdit = adminType ? { adminType } : {};
       const user = await UserModel.updateOne(
