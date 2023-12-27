@@ -326,8 +326,8 @@ const getAllUsers = async (req, res) => {
       user = await UserModel.find({
         usertype: "user",
         $or: [
-          { name: { $options: "i", $regex: searchString } },
-          { email: { $options: "i", $regex: searchString } },
+          { name: { $regex: searchString } },
+          { email: { $regex: searchString } },
         ],
       })
         .skip(skip)
