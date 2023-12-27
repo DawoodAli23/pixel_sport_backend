@@ -331,7 +331,7 @@ const getAllUsers = async (req, res) => {
           { email: { $regex: `/^${searchString}.*/`, $options: "i" } },
         ],
       })
-        .skip(skip)
+        // .skip(skip)
         .limit(20)
         .lean();
     } else {
