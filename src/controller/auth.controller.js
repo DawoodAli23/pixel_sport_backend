@@ -221,7 +221,7 @@ const update = async (req, res) => {
     const emailtoEdit = email ? { email } : {};
     const passwordToEdit = password ? { password: encryptedPassword } : {};
     const phoneToEdit =
-      phone != "null" && phone != "undefiend" && phone ? { phone } : {};
+      phone != "null" && phone != "undefined" ? { phone } : {};
     const addressToEdit = address ? { address } : {};
     const statusToEdit = status ? { status } : {};
 
