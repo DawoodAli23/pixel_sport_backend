@@ -24,7 +24,7 @@ const generatePaymentUrl = async (req, res) => {
       item_0_name: package_id,
       merchantName: process.env.MERCHANT_USERNAME,
       merchantReferenceCode: timestamp,
-      merchantSecretKey: process.env.TEST_PAYMENT_SECRET_KEY,
+      merchantSecretKey: process.env.PAYMENT_SECRET_KEY,
       merchantToken: timestamp,
       returnUrl: "http://pixelsport.tv/membership_plan",
     };
@@ -33,10 +33,7 @@ const generatePaymentUrl = async (req, res) => {
       process.env.LIVE_MODE,
       concatenatedString
     );
-    body["sig"] = generateHmacSha512(
-      fullURL,
-      process.env.TEST_PAYMENT_SECRET_KEY
-    );
+    body["sig"] = generateHmacSha512(fullURL, process.env.PAYMENT_SECRET_KEY);
     const token = await axios.post(process.env.LIVE_MODE, body, {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -77,7 +74,7 @@ const verifyPayment = async (req, res) => {
     }
     const body = {
       merchantName: process.env.MERCHANT_USERNAME,
-      merchantSecretKey: process.env.TEST_PAYMENT_SECRET_KEY,
+      merchantSecretKey: process.env.PAYMENT_SECRET_KEY,
       token: payment.token,
     };
     const concatenatedString = generateConcatenatedString(body);
@@ -85,10 +82,7 @@ const verifyPayment = async (req, res) => {
       process.env.LIVE_MODE_DETAILS,
       concatenatedString
     );
-    body["sig"] = generateHmacSha512(
-      fullURL,
-      process.env.TEST_PAYMENT_SECRET_KEY
-    );
+    body["sig"] = generateHmacSha512(fullURL, process.env.PAYMENT_SECRET_KEY);
     const paymentDetails = await axios.post(
       process.env.LIVE_MODE_DETAILS,
       body,
