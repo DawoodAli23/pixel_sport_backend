@@ -48,7 +48,7 @@ const generatePaymentUrl = async (req, res) => {
 
     res.status(200).send({
       message: "Token Generated!",
-      data: `https://securetest.paycec.com/redirect-service/webscreen?token=${token.data.token}`,
+      data: `https://secure.paycec.com/redirect-service/webscreen?token=${token.data.token}`,
     });
   } catch (error) {
     res.send({ error: error.message });
