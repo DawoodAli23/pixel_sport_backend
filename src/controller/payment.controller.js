@@ -15,6 +15,7 @@ const generatePaymentUrl = async (req, res) => {
       user,
       body: { package_id },
     } = req;
+    console.log(user.expiryDate, +new Date() > +new Date(user.expiryDate));
     if (user.expiryDate) {
       if (+new Date() > +new Date(user.expiryDate)) {
         throw new Error(
