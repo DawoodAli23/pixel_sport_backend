@@ -16,6 +16,10 @@ app.listen(process.env.PORT, () => {
 });
 process.env.TZ = "GMT";
 
+app.get("/", (req, res) => {
+  res.send("hello");
+  // createChannels();
+});
 cron.schedule("0 9 * * *", () => {
   createChannels();
 });
@@ -23,4 +27,3 @@ cron.schedule("0 9 * * *", () => {
 cron.schedule("0 9 * * *", () => {
   sendMail();
 });
-// createChannels();
