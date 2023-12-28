@@ -16,18 +16,19 @@ app.listen(process.env.PORT, () => {
 });
 process.env.TZ = "GMT";
 
-cron.schedule("0 9 * * *", () => {
-  createChannels();
-});
-
-cron.schedule("0 9 * * *", () => {
-  sendMail();
-});
-
 cron.schedule(
-  "15 6 * * *",
+  "0 14 * * *",
   () => {
-    console.log("cron working");
+    createChannels();
+  },
+  {
+    timezone: "Asia/Karachi",
+  }
+);
+cron.schedule(
+  "0 14 * * *",
+  () => {
+    sendMail();
   },
   {
     timezone: "Asia/Karachi",
