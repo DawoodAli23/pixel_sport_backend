@@ -9,6 +9,7 @@ const couponRoutes = require("./coupon.routes");
 const transactionRoutes = require("./transactions.routes");
 const sliderRoutes = require("./slider.routes");
 const wishlistRoutes = require("./wishList.routes");
+const cronRoutes = require("./cron.routes");
 const { userMiddleware, adminMiddleware } = require("../middleware/jwt");
 router
   .use("/backend/auth", authRoutes)
@@ -19,5 +20,6 @@ router
   .use("/backend/coupon", userMiddleware, couponRoutes)
   .use("/backend/transactions", userMiddleware, transactionRoutes)
   .use("/backend/slider", sliderRoutes)
-  .use("/backend/wishList", userMiddleware, wishlistRoutes);
+  .use("/backend/wishList", userMiddleware, wishlistRoutes)
+  .use("/backend/cron", cronRoutes);
 module.exports = router;
