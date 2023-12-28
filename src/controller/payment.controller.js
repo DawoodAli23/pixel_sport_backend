@@ -208,7 +208,6 @@ const canView = async (req, res) => {
     const {
       user: { expiryDate },
     } = req;
-    console.log(expiryDate);
     if (!expiryDate) {
       return res.send({
         flag: false,

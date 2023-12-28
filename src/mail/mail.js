@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+const smtpTransport = require("nodemailer-smtp-transport");
 // const emailSent = (email, output) => {
 //   return new Promise((resolve, reject) => {
 //     var transporter = nodemailer.createTransport({
@@ -36,12 +37,12 @@ const emailSent = (email, output, subject) => {
       secure: true, // use SSL
       service: "gmail",
       auth: {
-        user: "rafaymuhammad245@gmail.com",
-        pass: "vyrskmtybztxqyrx",
+        user: "Pixelsporttv@gmail.com",
+        pass: "ruwbehqlgcdlnbap",
       },
     });
     var mailOptions = {
-      from: "rafaymuhammad245@gmail.com",
+      from: "contact@pixelsport.tv",
       to: email,
       subject: subject,
       html: output,

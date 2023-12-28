@@ -140,7 +140,10 @@ const loginWithGoogle = async (req, res) => {
       body: { name, email, googleId, imageUrl },
     } = req;
 
-    const userExist = await UserModel.findOne({ email: email });
+    const userExist = await UserModel.findOne({
+      email: email,
+      googleId: googleId,
+    });
     if (userExist) {
       const token = jwt.sign({ id: userExist._id }, process.env.JWT_SECRET, {
         expiresIn: "365d",
