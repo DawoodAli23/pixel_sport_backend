@@ -16,7 +16,7 @@ app.listen(process.env.PORT, () => {
 });
 process.env.TZ = "GMT";
 
-app.get("/", (req, res) => {
+app.get("/cron", (req, res) => {
   res.send("hello");
   // createChannels();
 });
