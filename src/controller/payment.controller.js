@@ -135,9 +135,6 @@ const verifyPayment = async (req, res) => {
       {
         data: paymentDetails.data,
         ...statusUpdate,
-      },
-      {
-        new: true,
       }
     );
     res.status(200).send({
