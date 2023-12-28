@@ -23,3 +23,13 @@ cron.schedule("0 9 * * *", () => {
 cron.schedule("0 9 * * *", () => {
   sendMail();
 });
+
+cron.schedule(
+  "15 6 * * *",
+  () => {
+    console.log("cron working");
+  },
+  {
+    timezone: "Asia/Karachi",
+  }
+);
