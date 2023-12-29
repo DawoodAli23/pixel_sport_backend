@@ -221,10 +221,182 @@ const canView = async (req, res) => {
   }
 };
 
+// const getPayments = async (req, res) => {
+//   try {
+//     const {
+//       params: { skip },
+//       query: { searchString },
+//     } = req;
+
+//     if (!searchString) {
+//       return res.status(400).send({
+//         error: "parameter is required.",
+//       });
+//     }
+//     const userPayments = await PaymentModel.aggregate([
+//       {
+//         $lookup: {
+//           from: "users",
+//           localField: "userId",
+//           foreignField: "_id",
+//           as: "userdata",
+//         },
+//       },
+
+//       // {
+//       //   $match: {
+//       //     "userdata.email": { $regex: new RegExp(searchString, "i") },
+//       //   },
+//       // },
+//       {
+//         $project: {
+//           _id: 1,
+//           userdata: {
+//             $filter: {
+//               input: "$userdata",
+//               as: "userItem",
+//               cond: {
+//                 $or: [
+//                   {
+//                     $regexMatch: {
+//                       input: "$$userItem.email",
+//                       regex: new RegExp(searchString, "i"),
+//                     },
+//                   },
+//                 ],
+//               },
+//             },
+//           },
+//           userId: 1,
+//           packageId: 1,
+//           status: 1,
+//           createdAt: 1,
+//           updatedAt: 1,
+//           __v: 1,
+//         },
+//       },
+
+//       {
+//         $skip: parseInt(skip),
+//       },
+//       {
+//         $limit: 10,
+//       },
+//     ]);
+//     res.status(200).send({
+//       data: { userPayments },
+//     });
+//   } catch (error) {
+//     res.status(500).send({ error: error.message });
+//   }
+// };
+const getPayments = async (req, res) => {
+  try {
+    const {
+      params: { skip },
+      query: { searchString },
+    } = req;
+
+    // if (!searchString) {
+    //   return res.status(400).send({
+    //     error: "Parameter is required.",
+    //   });
+    // }
+
+    const userPayments = await PaymentModel.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "userdata",
+        },
+      },
+      {
+        $lookup: {
+          from: "paymentpackages",
+          localField: "packageId",
+          foreignField: "_id",
+          as: "packagedata",
+        },
+      },
+      {
+        $unwind: "$userdata",
+      },
+      { $unwind: "$packagedata" },
+      {
+        $match: {
+          "userdata.email": { $regex: new RegExp(searchString, "i") },
+        },
+      },
+      {
+        $match: {
+          userdata: { $ne: [] },
+        },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          userId: { $first: "$userId" },
+          packageId: { $first: "$packageId" },
+          status: { $first: "$status" },
+          createdAt: { $first: "$createdAt" },
+          updatedAt: { $first: "$updatedAt" },
+          token: { $first: "$token" },
+          __v: { $first: "$__v" },
+          userdata: { $push: "$userdata" },
+          packagedata: { $push: "$packagedata" },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          packagedata: 1,
+          userdata: {
+            $filter: {
+              input: "$userdata",
+              as: "userItem",
+              cond: {
+                $or: [
+                  {
+                    $regexMatch: {
+                      input: "$$userItem.email",
+                      regex: new RegExp(searchString, "i"),
+                    },
+                  },
+                ],
+              },
+            },
+          },
+          userId: 1,
+          packageId: 1,
+          status: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          token: 1,
+          __v: 1,
+        },
+      },
+      {
+        $skip: parseInt(skip),
+      },
+      {
+        $limit: 10,
+      },
+    ]);
+
+    res.status(200).send({
+      data: { userPayments },
+    });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+};
 module.exports = {
   generatePaymentUrl,
   canView,
   verifyPayment,
   freeTier,
   getPaymentsOfUser,
+  getPayments,
 };
