@@ -111,8 +111,8 @@ const verifyPayment = async (req, res) => {
     if (paymentDetails.data.isSuccessful === "true") {
       let currentDate = moment();
 
-      if (user.expiryDate) {
-        currentDate = moment(user.expiryDate);
+      if (user.expiryDate && moment().isAfter(moment(user.expiryDate))) {
+        currentDate = moment();
       }
       if (user.expiryDate && moment().isBefore(moment(user.expiryDate))) {
         currentDate = moment(user.expiryDate);
