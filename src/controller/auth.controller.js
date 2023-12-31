@@ -176,7 +176,10 @@ const login = async (req, res) => {
     const {
       body: { password, email },
     } = req;
-    const userExist = await UserModel.findOne({ email }).lean();
+    const userExist = await UserModel.findOne({
+      email,
+      status: "active",
+    }).lean();
     if (!userExist) {
       throw new Error("Email does not exist!");
     }
