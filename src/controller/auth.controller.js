@@ -181,7 +181,7 @@ const login = async (req, res) => {
       status: "active",
     }).lean();
     if (!userExist) {
-      throw new Error("Email does not exist!");
+      throw new Error("Email does not exist or account is inactive!");
     }
     const match = await bcrypt.compare(password, userExist.password);
     if (!match) {
