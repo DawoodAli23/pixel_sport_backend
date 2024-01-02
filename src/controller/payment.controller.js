@@ -111,14 +111,20 @@ const verifyPayment = async (req, res) => {
     if (paymentDetails.data.isSuccessful === "true") {
       let currentDate = moment();
 
-      if (user.expiryDate && moment().isAfter(moment(user.expiryDate))) {
+      if (
+        user.expiryDate &&
+        moment(new Date()).isAfter(moment(user.expiryDate))
+      ) {
         currentDate = moment();
       }
-      if (user.expiryDate && moment().isBefore(moment(user.expiryDate))) {
+      if (
+        user.expiryDate &&
+        moment(new Date()).isBefore(moment(user.expiryDate))
+      ) {
         currentDate = moment(user.expiryDate);
       }
       let nextDay = moment(currentDate).add(package.days, "days");
-
+      console.log(currentDate, nextDay, new Date());
       await UserModel.findOneAndUpdate(
         {
           _id: user._id,

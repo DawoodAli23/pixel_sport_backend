@@ -297,7 +297,6 @@ const sendVerificationCode = async (req, res) => {
 const codeverification = async (req, res) => {
   try {
     const { email, code, password } = req.body;
-    console.log(email, code);
     const user = await UserModel.findOne({ email: email });
     const encryptedPassword = await bcrypt.hash(password, 11);
     if (user.verifyCode == code) {
@@ -410,7 +409,6 @@ const addSubAdmin = async (req, res) => {
 };
 const editSubAdmin = async (req, res) => {
   try {
-    console.log("subadmin");
     const { id, name, email, password, phone, adminType, status } = req.body;
     const userExist = await UserModel.findOne({ email }).lean();
     if (userExist) {
