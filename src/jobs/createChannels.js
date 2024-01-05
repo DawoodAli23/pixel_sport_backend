@@ -116,7 +116,10 @@ const filterByTeamAndName = (arrayOfObjects, teamName) => {
     const homeTeamName = homeTeam ? homeTeam.displayName : null;
     const gameNameWithoutLive = lowercaseTeamName.replace(/\s*live$/i, "");
 
-    return homeTeamName.toLowerCase() === gameNameWithoutLive;
+    return (
+      homeTeamName.toLowerCase() === gameNameWithoutLive ||
+      gameNameWithoutLive.includes(homeTeamName.toLowerCase())
+    );
   });
 };
 module.exports = createChannels;
