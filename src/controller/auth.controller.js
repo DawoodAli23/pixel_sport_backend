@@ -13,6 +13,11 @@ const calculatePayment = (array) => {
   }
   return amount;
 };
+function generateRandomNumber() {
+  // Generate a random number between 100000 and 999999
+  const randomNumber = Math.floor(Math.random() * 900000) + 100000;
+  return randomNumber;
+}
 const getPaymentsByDateRange = async (req, res) => {
   try {
     const today = moment().startOf("day");
@@ -79,16 +84,29 @@ const register = async (req, res) => {
       throw new Error("Email is already taken");
     }
     const encryptedPassword = await bcrypt.hash(password, 10);
+    let verificationCode = generateRandomNumber();
     const user = await UserModel.create({
       name,
       email: email.toLowerCase(),
       password: encryptedPassword,
+      code: verificationCode,
     });
     delete user._doc["password"];
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "365d",
     });
 
+    const output = `<!DOCTYPE html>
+    <html>
+    <head>
+      <title>Verification Code</title>
+    </head>
+    <body>
+      <h1>Verification Code</h1>
+      <p>Your verification code is: <strong id="verificationCode">${verificationCode}</strong></p>
+    </body>
+    </html>`;
+    await emailSent(email, output, "verification");
     res.status(200).send({
       message: "Signed up successfully!",
       data: { user, token },
@@ -138,6 +156,36 @@ const createUser = async (req, res) => {
     res.send({ error: error.message });
   }
 };
+const verifyEmail = async (req, res) => {
+  try {
+    const { email, code } = req.body;
+    const user = await UserModel.findOne({ email: email.toLowerCase() });
+    if (user.code == code) {
+      const result = await UserModel.findOneAndUpdate(
+        { email: email.toLowerCase() },
+        { $set: { code: "", isVerified: true } },
+        { new: true }
+      );
+
+      if (result) {
+        return res.status(200).json({
+          message: "User verified",
+        });
+      } else {
+        return res.status(400).json({
+          message: "something went wrong",
+        });
+      }
+    } else {
+      return res.status(401).json({
+        message: "something went wrong",
+      });
+    }
+  } catch (err) {
+    console.log(err.stack);
+    res.status(500).json({ err });
+  }
+};
 const loginWithGoogle = async (req, res) => {
   try {
     const {
@@ -183,6 +231,7 @@ const login = async (req, res) => {
     const userExist = await UserModel.findOne({
       email: email.toLowerCase(),
       status: "active",
+      isVerified: true,
     }).lean();
     if (!userExist) {
       throw new Error("Email does not exist or account is inactive!");
@@ -262,11 +311,7 @@ const update = async (req, res) => {
     res.send({ error: error.message });
   }
 };
-function generateRandomNumber() {
-  // Generate a random number between 100000 and 999999
-  const randomNumber = Math.floor(Math.random() * 900000) + 100000;
-  return randomNumber;
-}
+
 const sendVerificationCode = async (req, res) => {
   try {
     const { email } = req.body;
@@ -489,6 +534,29 @@ const getUserDetail = async (req, res) => {
     res.send({ error: error.message });
   }
 };
+const editUsers = async () => {
+  try {
+    const users = await UserModel.updateMany({}, [
+      {
+        $set: {
+          verified: true,
+          // email: { $toLower: "$email" },
+        },
+      },
+    ]);
+    // const users = await UserModel.updateMany({}, [
+    //   {
+    //     $set: {
+    //       verified: true,
+    //       email: { $toLower: "$email" },
+    //     },
+    //   },
+    // ]);
+    console.log(users);
+  } catch (error) {
+    console.log(error);
+  }
+};
 module.exports = {
   register,
   login,
@@ -506,4 +574,6 @@ module.exports = {
   getPaymentsByDateRange,
   getDetails,
   getUserDetail,
+  editUsers,
+  verifyEmail,
 };

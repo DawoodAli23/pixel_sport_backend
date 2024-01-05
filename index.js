@@ -7,6 +7,7 @@ require("./src/config/connection")();
 const cors = require("cors");
 const createChannels = require("./src/jobs/createChannels");
 // const { populatePayments } = require("./src/jobs/createTransaction");
+// const { editUsers } = require("./src/controller/auth.controller");
 const { sendMail } = require("./src/jobs/sendExpiredMails");
 app.use("/backend", express.static(path.join(__dirname, "uploads")));
 app.use(cors());
@@ -35,4 +36,5 @@ cron.schedule(
     timezone: "Asia/Karachi",
   }
 );
+// editUsers();
 // populatePayments();

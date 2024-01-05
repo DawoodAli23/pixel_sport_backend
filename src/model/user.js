@@ -55,6 +55,13 @@ const userSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "paymentpackages",
     },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    code: {
+      type: String,
+    },
   },
   {
     timestamps: true,

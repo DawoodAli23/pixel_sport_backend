@@ -1,0 +1,38 @@
+[
+  {
+    "id": "6",
+    "plan_name": "Basic Service",
+    "plan_days": "7",
+    "plan_duration": "7",
+    "plan_duration_type": "1",
+    "plan_price": "7.00",
+    "status": "1"
+  },
+  {
+    "id": "7",
+    "plan_name": "Premium Service",
+    "plan_days": "30",
+    "plan_duration": "30",
+    "plan_duration_type": "1",
+    "plan_price": "10.00",
+    "status": "1"
+  },
+  {
+    "id": "9",
+    "plan_name": "Platinum Service",
+    "plan_days": "365",
+    "plan_duration": "1",
+    "plan_duration_type": "365",
+    "plan_price": "100.00",
+    "status": "1"
+  },
+  {
+    "id": "10",
+    "plan_name": "Free Service - No Card required",
+    "plan_days": "1",
+    "plan_duration": "1",
+    "plan_duration_type": "1",
+    "plan_price": "0.00",
+    "status": "1"
+  }
+]

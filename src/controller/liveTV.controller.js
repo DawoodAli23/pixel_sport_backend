@@ -184,6 +184,7 @@ const getEventById = async (req, res) => {
         },
       })
       .lean();
+    console.log(events);
     res.json({
       events,
     });

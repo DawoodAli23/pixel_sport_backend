@@ -16,6 +16,7 @@ const {
   getPaymentsByDateRange,
   getDetails,
   getUserDetail,
+  verifyEmail,
 } = require("../controller/auth.controller");
 const { userMiddleware, adminMiddleware } = require("../middleware/jwt");
 
@@ -45,4 +46,5 @@ router.get(
 );
 router.get("/test", sendMail);
 router.get("/getuserdetails/:id", userMiddleware, getUserDetail);
+router.post("/verifyEmail", verifyEmail);
 module.exports = router;

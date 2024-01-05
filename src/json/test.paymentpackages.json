@@ -1,0 +1,66 @@
+[
+  {
+    "_id": {
+      "$oid": "656a28b0dd38c3eebf3454af"
+    },
+    "name": "Free Service - No Card required",
+    "amount": 0,
+    "days": 1,
+    "status": true,
+    "createdAt": {
+      "$date": "2023-12-01T18:40:48.186Z"
+    },
+    "updatedAt": {
+      "$date": "2023-12-01T18:40:48.186Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "656a28b0dd38c3eebf3454b0"
+    },
+    "name": "Basic Service",
+    "amount": 7,
+    "days": 7,
+    "status": true,
+    "createdAt": {
+      "$date": "2023-12-01T18:40:48.187Z"
+    },
+    "updatedAt": {
+      "$date": "2023-12-19T20:40:05.376Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "656a28b0dd38c3eebf3454b1"
+    },
+    "name": "Premium Service",
+    "amount": 10,
+    "days": 30,
+    "status": true,
+    "createdAt": {
+      "$date": "2023-12-01T18:40:48.187Z"
+    },
+    "updatedAt": {
+      "$date": "2023-12-18T21:27:20.446Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "656a28b0dd38c3eebf3454b2"
+    },
+    "name": "Platinum Service",
+    "amount": 100,
+    "days": 365,
+    "status": true,
+    "createdAt": {
+      "$date": "2023-12-01T18:40:48.187Z"
+    },
+    "updatedAt": {
+      "$date": "2023-12-01T18:40:48.187Z"
+    },
+    "__v": 0
+  }
+]
