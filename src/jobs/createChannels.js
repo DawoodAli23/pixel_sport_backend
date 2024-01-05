@@ -115,7 +115,7 @@ const filterByTeamAndName = (arrayOfObjects, teamName) => {
     const homeTeam = game.competitors.find((team) => team.homeAway === "home");
     const homeTeamName = homeTeam ? homeTeam.displayName : null;
     const gameNameWithoutLive = lowercaseTeamName.replace(/\s*live$/i, "");
-
+    console.log(homeTeamName.toLowerCase(), gameNameWithoutLive);
     return (
       homeTeamName.toLowerCase() === gameNameWithoutLive ||
       gameNameWithoutLive.includes(homeTeamName.toLowerCase())

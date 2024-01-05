@@ -72,14 +72,16 @@ const register = async (req, res) => {
     const {
       body: { name, password, email },
     } = req;
-    const userExist = await UserModel.findOne({ email }).lean();
+    const userExist = await UserModel.findOne({
+      email: email.toLowerCase(),
+    }).lean();
     if (userExist) {
       throw new Error("Email is already taken");
     }
     const encryptedPassword = await bcrypt.hash(password, 10);
     const user = await UserModel.create({
       name,
-      email,
+      email: email.toLowerCase(),
       password: encryptedPassword,
     });
     delete user._doc["password"];
@@ -109,7 +111,9 @@ const createUser = async (req, res) => {
         status,
       },
     } = req;
-    const userExist = await UserModel.findOne({ email }).lean();
+    const userExist = await UserModel.findOne({
+      email: email.toLowerCase(),
+    }).lean();
 
     if (userExist) {
       throw new Error("Email is already taken");
@@ -117,7 +121,7 @@ const createUser = async (req, res) => {
     const encryptedPassword = await bcrypt.hash(password, 10);
     const user = await UserModel.create({
       name,
-      email,
+      email: email.toLowerCase(),
       password: encryptedPassword,
       phone,
       address,
@@ -141,7 +145,7 @@ const loginWithGoogle = async (req, res) => {
     } = req;
 
     const userExist = await UserModel.findOne({
-      email: email,
+      email: email.toLowerCase(),
       googleId: googleId,
     });
     if (userExist) {
@@ -155,7 +159,7 @@ const loginWithGoogle = async (req, res) => {
     } else {
       const user = await UserModel.create({
         name,
-        email,
+        email: email.toLowerCase(),
         googleId,
         image: imageUrl,
       });
@@ -177,7 +181,7 @@ const login = async (req, res) => {
       body: { password, email },
     } = req;
     const userExist = await UserModel.findOne({
-      email,
+      email: email.toLowerCase(),
       status: "active",
     }).lean();
     if (!userExist) {
@@ -224,7 +228,7 @@ const update = async (req, res) => {
     const filePath = req?.file?.path;
     const imageToEdit = filePath ? { image: filePath } : {};
     const nameToEdit = name ? { name } : {};
-    const emailtoEdit = email ? { email } : {};
+    const emailtoEdit = email ? { email: email.toLowerCase() } : {};
     const passwordToEdit = password ? { password: encryptedPassword } : {};
     const phoneToEdit =
       phone != "null" && phone != "undefined" ? { phone } : {};
@@ -297,11 +301,11 @@ const sendVerificationCode = async (req, res) => {
 const codeverification = async (req, res) => {
   try {
     const { email, code, password } = req.body;
-    const user = await UserModel.findOne({ email: email });
+    const user = await UserModel.findOne({ email: email.toLowerCase() });
     const encryptedPassword = await bcrypt.hash(password, 11);
     if (user.verifyCode == code) {
       const result = await UserModel.findOneAndUpdate(
-        { email: email },
+        { email: email.toLowerCase() },
         { $set: { password: encryptedPassword, verifyCode: "" } },
         { new: true }
       );
@@ -410,13 +414,15 @@ const addSubAdmin = async (req, res) => {
 const editSubAdmin = async (req, res) => {
   try {
     const { id, name, email, password, phone, adminType, status } = req.body;
-    const userExist = await UserModel.findOne({ email }).lean();
+    const userExist = await UserModel.findOne({
+      email: email.toLowerCase(),
+    }).lean();
     if (userExist) {
       const encryptedPassword = await bcrypt.hash(password, 10);
       const filePath = req?.file?.path;
       const imageToEdit = filePath ? { image: filePath } : {};
       const nameToEdit = name ? { name } : {};
-      const emailtoEdit = email ? { email } : {};
+      const emailtoEdit = email ? { email: email.toLowerCase() } : {};
       const passwordToEdit = password ? { password: encryptedPassword } : {};
       const phoneToEdit =
         phone != "null" && phone != "undefined" ? { phone } : {};
