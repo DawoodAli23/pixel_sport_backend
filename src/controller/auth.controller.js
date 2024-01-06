@@ -228,11 +228,13 @@ const login = async (req, res) => {
     const {
       body: { password, email },
     } = req;
+    console.log(email, password);
     const userExist = await UserModel.findOne({
-      email: email.toLowerCase(),
+      email: email,
       status: "active",
-      isVerified: true,
+      // isVerified: true,
     }).lean();
+    console.log(userExist);
     if (!userExist) {
       throw new Error("Email does not exist or account is inactive!");
     }
