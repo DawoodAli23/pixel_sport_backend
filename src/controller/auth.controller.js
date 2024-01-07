@@ -78,7 +78,7 @@ const register = async (req, res) => {
       body: { name, password, email },
     } = req;
     const userExist = await UserModel.findOne({
-      email: email.toLowerCase(),
+      email: email,
     }).lean();
     if (userExist) {
       throw new Error("Email is already taken");
@@ -87,7 +87,7 @@ const register = async (req, res) => {
     let verificationCode = generateRandomNumber();
     const user = await UserModel.create({
       name,
-      email: email.toLowerCase(),
+      email: email,
       password: encryptedPassword,
       code: verificationCode,
     });
@@ -130,7 +130,7 @@ const createUser = async (req, res) => {
       },
     } = req;
     const userExist = await UserModel.findOne({
-      email: email.toLowerCase(),
+      email: email,
     }).lean();
 
     if (userExist) {
@@ -139,7 +139,7 @@ const createUser = async (req, res) => {
     const encryptedPassword = await bcrypt.hash(password, 10);
     const user = await UserModel.create({
       name,
-      email: email.toLowerCase(),
+      email: email,
       password: encryptedPassword,
       phone,
       address,
@@ -159,10 +159,10 @@ const createUser = async (req, res) => {
 const verifyEmail = async (req, res) => {
   try {
     const { email, code } = req.body;
-    const user = await UserModel.findOne({ email: email.toLowerCase() });
+    const user = await UserModel.findOne({ email: email });
     if (user.code == code) {
       const result = await UserModel.findOneAndUpdate(
-        { email: email.toLowerCase() },
+        { email: email },
         { $set: { code: "", isVerified: true } },
         { new: true }
       );
@@ -193,7 +193,7 @@ const loginWithGoogle = async (req, res) => {
     } = req;
 
     const userExist = await UserModel.findOne({
-      email: email.toLowerCase(),
+      email: email,
       googleId: googleId,
     });
     if (userExist) {
@@ -207,7 +207,7 @@ const loginWithGoogle = async (req, res) => {
     } else {
       const user = await UserModel.create({
         name,
-        email: email.toLowerCase(),
+        email: email,
         googleId,
         image: imageUrl,
       });
@@ -279,7 +279,7 @@ const update = async (req, res) => {
     const filePath = req?.file?.path;
     const imageToEdit = filePath ? { image: filePath } : {};
     const nameToEdit = name ? { name } : {};
-    const emailtoEdit = email ? { email: email.toLowerCase() } : {};
+    const emailtoEdit = email ? { email: email } : {};
     const passwordToEdit = password ? { password: encryptedPassword } : {};
     const phoneToEdit =
       phone != "null" && phone != "undefined" ? { phone } : {};
@@ -348,11 +348,11 @@ const sendVerificationCode = async (req, res) => {
 const codeverification = async (req, res) => {
   try {
     const { email, code, password } = req.body;
-    const user = await UserModel.findOne({ email: email.toLowerCase() });
+    const user = await UserModel.findOne({ email: email });
     const encryptedPassword = await bcrypt.hash(password, 11);
     if (user.verifyCode == code) {
       const result = await UserModel.findOneAndUpdate(
-        { email: email.toLowerCase() },
+        { email: email },
         { $set: { password: encryptedPassword, verifyCode: "" } },
         { new: true }
       );
@@ -462,14 +462,14 @@ const editSubAdmin = async (req, res) => {
   try {
     const { id, name, email, password, phone, adminType, status } = req.body;
     const userExist = await UserModel.findOne({
-      email: email.toLowerCase(),
+      email: email,
     }).lean();
     if (userExist) {
       const encryptedPassword = await bcrypt.hash(password, 10);
       const filePath = req?.file?.path;
       const imageToEdit = filePath ? { image: filePath } : {};
       const nameToEdit = name ? { name } : {};
-      const emailtoEdit = email ? { email: email.toLowerCase() } : {};
+      const emailtoEdit = email ? { email: email } : {};
       const passwordToEdit = password ? { password: encryptedPassword } : {};
       const phoneToEdit =
         phone != "null" && phone != "undefined" ? { phone } : {};
