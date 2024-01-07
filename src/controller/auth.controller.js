@@ -106,7 +106,7 @@ const register = async (req, res) => {
       <p>Your verification code is: <strong id="verificationCode">${verificationCode}</strong></p>
     </body>
     </html>`;
-    await emailSent(email, output, "verification");
+    // await emailSent(email, output, "verification");
     res.status(200).send({
       message: "Signed up successfully!",
       data: { user, token },
