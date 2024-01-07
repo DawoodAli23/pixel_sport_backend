@@ -78,7 +78,7 @@ const register = async (req, res) => {
       body: { name, password, email },
     } = req;
     const userExist = await UserModel.findOne({
-      email: email,
+      email: { $regex: new RegExp(email, "i") },
     }).lean();
     if (userExist) {
       throw new Error("Email is already taken");
@@ -87,7 +87,7 @@ const register = async (req, res) => {
     let verificationCode = generateRandomNumber();
     const user = await UserModel.create({
       name,
-      email: email,
+      email: email.toLowerCase(),
       password: encryptedPassword,
       code: verificationCode,
     });
@@ -230,7 +230,7 @@ const login = async (req, res) => {
     } = req;
     console.log(email, password);
     const userExist = await UserModel.findOne({
-      email: email,
+      email: { $regex: new RegExp(email, "i") },
       status: "active",
       // isVerified: true,
     }).lean();
